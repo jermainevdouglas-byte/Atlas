@@ -114,6 +114,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
   padding: 10px 0 36px;
   text-align: center;
 }
@@ -140,11 +141,13 @@ a {
 .door-link {
   text-decoration: none;
   display: block;
+  margin-inline: auto;
 }
 
 .door-photo-link {
   position: relative;
-  display: inline-block;
+  display: block;
+  margin-inline: auto;
   border-radius: 20px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -159,7 +162,7 @@ a {
 
 .door-photo {
   display: block;
-  width: min(400px, 82vw);
+  width: min(325px, 84vw);
   height: auto;
   object-fit: contain;
   object-position: center center;
@@ -311,7 +314,7 @@ textarea {
   }
 
   .door-photo {
-    width: 88vw;
+    width: min(325px, 88vw);
     height: auto;
   }
 }
