@@ -162,7 +162,7 @@ a {
 
 .door-photo {
   display: block;
-  width: min(325px, 84vw);
+  width: min(390px, 84vw);
   height: auto;
   object-fit: contain;
   object-position: center center;
@@ -314,7 +314,7 @@ textarea {
   }
 
   .door-photo {
-    width: min(325px, 88vw);
+    width: min(390px, 88vw);
     height: auto;
   }
 }
