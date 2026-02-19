@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About AtlasBahamas</title>
+  <title>Register | AtlasBahamas</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
@@ -29,18 +29,26 @@
     <div class="public-inner">
       <div class="public-header">
         <div>
-          <h2>About Atlas</h2>
-          <p class="muted">Built around clarity, trust, and smooth navigation.</p>
+          <h2>Register</h2>
+          <p class="muted">Create your Atlas account.</p>
         </div>
       </div>
-
-      <div class="card" style="max-width:760px;">
-        <p>
-          AtlasBahamas is designed to feel intentional from the very first click. The homepage door is the center entry point and takes users directly to login.
-        </p>
-        <p style="margin-top:12px;">
-          The interface is kept minimal and focused, with strong hierarchy and clear paths between pages.
-        </p>
+      <div class="card" style="max-width:620px;">
+        <form>
+          <div class="field">
+            <label for="register-name">Full Name</label>
+            <input id="register-name" name="full_name" required>
+          </div>
+          <div class="field" style="margin-top:10px;">
+            <label for="register-email">Email</label>
+            <input id="register-email" type="email" name="email" required>
+          </div>
+          <div class="field" style="margin-top:10px;">
+            <label for="register-password">Password</label>
+            <input id="register-password" type="password" name="password" required>
+          </div>
+          <button class="primary-btn" style="margin-top:12px;" type="submit">Create Account</button>
+        </form>
       </div>
     </div>
   </section>

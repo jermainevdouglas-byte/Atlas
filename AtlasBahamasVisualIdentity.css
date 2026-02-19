@@ -59,6 +59,36 @@ a {
   gap: 12px;
 }
 
+.nav-left,
+.nav-right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.nav-right {
+  justify-content: flex-end;
+}
+
+.pill {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  padding: 9px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.pill:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
 .brand {
   justify-self: center;
   font-family: "Cinzel", Georgia, serif;
@@ -129,10 +159,10 @@ a {
 
 .door-photo {
   display: block;
-  width: min(420px, 85vw);
-  height: min(560px, 70vh);
-  object-fit: cover;
-  object-position: center;
+  width: min(400px, 82vw);
+  height: auto;
+  object-fit: contain;
+  object-position: center center;
 }
 
 .door-photo-badge {
@@ -266,8 +296,22 @@ textarea {
 }
 
 @media (max-width: 600px) {
+  .nav {
+    height: auto;
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .nav-left,
+  .nav-right {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
   .door-photo {
     width: 88vw;
-    height: 62vh;
+    height: auto;
   }
 }
