@@ -1,0 +1,22 @@
+Atlas GitHub Auto-Deploy Bundle
+
+Contents:
+- .github/workflows/deploy.yml
+
+How to use:
+1. Open your Atlas repo root.
+2. Copy the `.github` folder from this bundle into your repo root.
+3. Commit and push to GitHub.
+
+Required GitHub Actions secrets:
+- DEPLOY_HOST
+- DEPLOY_PORT
+- DEPLOY_USER
+- DEPLOY_SSH_KEY
+- DEPLOY_PATH
+
+Server requirements:
+- Repo already cloned at DEPLOY_PATH
+- Docker + docker compose installed
+- .env configured on server (not committed)
+- DEPLOY_USER can run docker commands

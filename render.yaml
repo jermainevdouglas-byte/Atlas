@@ -1,0 +1,103 @@
+databases:
+  - name: atlas-postgres
+    databaseName: atlas
+    user: atlas
+    plan: basic-1gb
+
+services:
+  - type: redis
+    name: atlas-redis
+    plan: starter
+    ipAllowList: []
+
+  - type: web
+    name: atlas-web
+    env: docker
+    plan: standard
+    autoDeploy: true
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    disk:
+      name: atlas-data
+      mountPath: /var/data
+      sizeGB: 10
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: PROD_MODE
+        value: "1"
+      - key: ENFORCE_HTTPS
+        value: "1"
+      - key: FORCE_SECURE_COOKIES
+        value: "1"
+      - key: COOKIE_SECURE
+        value: "1"
+      - key: SESSION_COOKIE_SAMESITE
+        value: Strict
+      - key: CSRF_COOKIE_SAMESITE
+        value: Strict
+      - key: SECURITY_HEADERS_ENABLED
+        value: "1"
+      - key: ALLOWED_HOSTS
+        value: .onrender.com,localhost,127.0.0.1
+      - key: CSRF_TRUSTED_HOSTS
+        value: .onrender.com,localhost,127.0.0.1
+      - key: DATABASE_PATH
+        value: /var/data/atlas.sqlite
+      - key: STORAGE_ROOT
+        value: /var/data/storage
+      - key: UPLOAD_DIR
+        value: /var/data/uploads
+      - key: LOG_DIR
+        value: /var/data/logs
+      - key: LOG_FILE
+        value: /var/data/logs/atlas.log
+      - key: BACKUP_DIR
+        value: /var/data/backups
+      - key: POSTGRES_REQUIRED
+        value: "1"
+      - key: POSTGRES_DSN
+        fromDatabase:
+          name: atlas-postgres
+          property: connectionString
+      - key: POSTGRES_HOST
+        fromDatabase:
+          name: atlas-postgres
+          property: host
+      - key: POSTGRES_PORT
+        fromDatabase:
+          name: atlas-postgres
+          property: port
+      - key: POSTGRES_DB
+        fromDatabase:
+          name: atlas-postgres
+          property: database
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: atlas-postgres
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: atlas-postgres
+          property: password
+      - key: REDIS_SESSIONS_ENABLED
+        value: "1"
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: atlas-redis
+          property: connectionString
+      - key: CLEAR_SESSIONS_ON_START
+        value: "0"
+      - key: SECRET_KEY
+        sync: false
+      - key: BOOTSTRAP_ADMIN_FULL_NAME
+        value: Atlas Administrator
+      - key: BOOTSTRAP_ADMIN_PHONE
+        sync: false
+      - key: BOOTSTRAP_ADMIN_EMAIL
+        sync: false
+      - key: BOOTSTRAP_ADMIN_USERNAME
+        sync: false
+      - key: BOOTSTRAP_ADMIN_PASSWORD
+        sync: false

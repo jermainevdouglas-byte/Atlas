@@ -1,0 +1,2 @@
+"""Atlas modular application package."""
+

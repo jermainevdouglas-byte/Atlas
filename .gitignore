@@ -1,1 +1,40 @@
-﻿AtlasBahamas.env
+AtlasBahamas.env
+
+# Secrets and local env
+.env
+.env.local
+.env.*.local
+
+# Python cache/build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Runtime data and logs
+data/
+atlas_app/data/
+*.log
+
+# Nested/legacy packages not part of this runtime repo
+atlas_github_autodeploy_package/
+site/
+
+# Temp files
+.tmp*
+*.tmp
+
+# Local archives/reports
+Atlas_Production_Audit_Package_*.zip
+AUDIT_REPORT_*.txt
+
+# Historical source dumps (not runtime source)
+complete_website_code.txt
+server_code.txt
+current_code_snapshot_*.txt
+
+# IDE and OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
