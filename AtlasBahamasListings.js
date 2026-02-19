@@ -17,11 +17,16 @@
     if (!auth) return;
 
     await auth.ensureSeedUsers();
-    const session = auth.getSession();
+    let session = await auth.getSession();
+
+    window.addEventListener("atlas-auth-changed", async () => {
+      session = await auth.getSession(true);
+    });
+
     const buttons = document.querySelectorAll("[data-listing-action]");
 
     buttons.forEach((button) => {
-      button.addEventListener("click", () => {
+      button.addEventListener("click", async () => {
         const listingName = button.getAttribute("data-listing-name") || "Listing";
         if (!session) {
           window.location.href = "AtlasBahamasLogin.html?next=AtlasBahamasListings.html";

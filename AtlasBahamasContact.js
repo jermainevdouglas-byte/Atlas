@@ -12,7 +12,7 @@
 
     if (!auth || !form || !notice) return;
 
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
       const payload = {
@@ -26,7 +26,12 @@
         return;
       }
 
-      auth.saveContactSubmission(payload);
+      const result = await auth.saveContactSubmission(payload);
+      if (!result.ok) {
+        setNotice(notice, "error", `<b>Message not sent:</b> ${result.error}`);
+        return;
+      }
+
       form.reset();
       setNotice(notice, "ok", "<b>Message sent.</b> Your note was saved for follow-up.");
     });

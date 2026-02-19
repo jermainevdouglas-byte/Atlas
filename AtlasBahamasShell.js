@@ -10,13 +10,13 @@
     return targets.includes(page) ? " active" : "";
   }
 
-  function mountHeader() {
+  async function mountHeader() {
     const nodes = document.querySelectorAll("[data-atlas-header]");
     if (!nodes.length) return;
 
     const auth = window.AtlasBahamasAuth;
     const page = currentPage();
-    const session = auth ? auth.getSession() : null;
+    const session = auth ? await auth.getSession() : null;
 
     const roleLabel = session ? (session.role === "landlord" ? "Landlord" : "Tenant") : "Guest";
     const dashboardHref = session && auth ? auth.roleHome(session.role) : "AtlasBahamasLogin.html";
@@ -47,8 +47,8 @@
 
     const logoutButtons = document.querySelectorAll("[data-atlas-logout]");
     logoutButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        if (auth) auth.logout();
+      button.addEventListener("click", async () => {
+        if (auth) await auth.logout();
         window.location.href = "AtlasBahamasHome.html";
       });
     });

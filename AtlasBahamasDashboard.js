@@ -22,7 +22,7 @@
     if (!root) return;
 
     const expectedRole = root.getAttribute("data-role") || "";
-    const gate = auth.requireRole(expectedRole);
+    const gate = await auth.requireRole(expectedRole);
 
     if (!gate.ok) {
       const role = auth.normalizeRole(expectedRole);
@@ -40,6 +40,11 @@
     const session = gate.session;
     const welcome = document.querySelector("[data-welcome-name]");
     if (welcome) welcome.textContent = session.fullName;
+
+    const dashboardResult = await auth.fetchDashboard(expectedRole);
+    if (!dashboardResult.ok) {
+      showToast("Dashboard sync warning", dashboardResult.error || "Unable to refresh dashboard metrics.");
+    }
 
     const actions = document.querySelectorAll("[data-dashboard-action]");
     actions.forEach((button) => {

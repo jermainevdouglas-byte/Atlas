@@ -5,7 +5,7 @@
 
     await auth.ensureSeedUsers();
 
-    const session = auth.getSession();
+    const session = await auth.getSession();
     const continueWrap = document.querySelector("[data-session-continue]");
 
     if (session && continueWrap) {

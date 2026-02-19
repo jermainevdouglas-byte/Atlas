@@ -1,38 +1,8 @@
-﻿(() => {
+(() => {
   const root = typeof window !== "undefined" ? window : globalThis;
-  const USERS_KEY = "atlasbahamas_users_v1";
-  const SESSION_KEY = "atlasbahamas_session_v1";
-  const CONTACT_KEY = "atlasbahamas_contact_submissions_v1";
 
-  function getStorage(customStorage) {
-    if (customStorage) return customStorage;
-    if (root.localStorage) return root.localStorage;
-
-    const mem = {};
-    return {
-      getItem: (k) => (Object.prototype.hasOwnProperty.call(mem, k) ? mem[k] : null),
-      setItem: (k, v) => {
-        mem[k] = String(v);
-      },
-      removeItem: (k) => {
-        delete mem[k];
-      }
-    };
-  }
-
-  function readJson(storage, key, fallback) {
-    try {
-      const raw = storage.getItem(key);
-      if (!raw) return fallback;
-      return JSON.parse(raw);
-    } catch {
-      return fallback;
-    }
-  }
-
-  function writeJson(storage, key, value) {
-    storage.setItem(key, JSON.stringify(value));
-  }
+  let sessionCache = null;
+  let sessionLoaded = false;
 
   function normalizeRole(role) {
     const value = String(role || "").trim().toLowerCase();
@@ -83,271 +53,214 @@
     return errors;
   }
 
-  function randomSalt(bytes = 16) {
-    const n = Math.max(8, Number(bytes) || 16);
-    const arr = new Uint8Array(n);
-
-    if (root.crypto && typeof root.crypto.getRandomValues === "function") {
-      root.crypto.getRandomValues(arr);
-    } else {
-      for (let i = 0; i < arr.length; i += 1) {
-        arr[i] = Math.floor(Math.random() * 256);
-      }
-    }
-
-    return Array.from(arr, (v) => v.toString(16).padStart(2, "0")).join("");
-  }
-
-  async function hashText(text) {
-    const value = String(text || "");
-
-    if (root.crypto && root.crypto.subtle && typeof root.crypto.subtle.digest === "function") {
-      const encoded = new TextEncoder().encode(value);
-      const digest = await root.crypto.subtle.digest("SHA-256", encoded);
-      return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
-    }
-
-    let hash = 2166136261;
-    for (let i = 0; i < value.length; i += 1) {
-      hash ^= value.charCodeAt(i);
-      hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
-    }
-    return (hash >>> 0).toString(16).padStart(8, "0");
-  }
-
-  async function hashPassword(password, salt) {
-    return hashText(`${salt}::${String(password || "")}`);
-  }
-
   function dispatchAuthChange() {
     try {
       if (typeof root.dispatchEvent === "function" && typeof root.CustomEvent === "function") {
         root.dispatchEvent(new root.CustomEvent("atlas-auth-changed"));
       }
     } catch {
-      // Ignore event dispatch errors for non-browser contexts.
+      // No-op on event dispatch issues in non-browser contexts.
     }
   }
 
-  function getUsers(options = {}) {
-    const storage = getStorage(options.storage);
-    const list = readJson(storage, USERS_KEY, []);
-    return Array.isArray(list) ? list : [];
+  async function apiRequest(path, options = {}) {
+    const method = String(options.method || "GET").toUpperCase();
+    const body = options.body;
+    const headers = {
+      Accept: "application/json",
+      ...(options.headers || {})
+    };
+
+    const fetchOptions = {
+      method,
+      credentials: "same-origin",
+      headers
+    };
+
+    if (body !== undefined) {
+      fetchOptions.body = JSON.stringify(body);
+      fetchOptions.headers["Content-Type"] = "application/json";
+    }
+
+    let response;
+    try {
+      response = await root.fetch(path, fetchOptions);
+    } catch {
+      return {
+        ok: false,
+        status: 0,
+        error: "Cannot reach Atlas API. Start the backend server and refresh."
+      };
+    }
+
+    let payload = {};
+    try {
+      payload = await response.json();
+    } catch {
+      payload = {};
+    }
+
+    if (!response.ok || payload.ok === false) {
+      return {
+        ok: false,
+        status: response.status,
+        error: payload.error || `Request failed (${response.status})`,
+        data: payload
+      };
+    }
+
+    return { ok: true, status: response.status, data: payload };
   }
 
-  function saveUsers(users, options = {}) {
-    const storage = getStorage(options.storage);
-    writeJson(storage, USERS_KEY, Array.isArray(users) ? users : []);
+  function cacheSession(session) {
+    sessionCache = session && typeof session === "object" ? session : null;
+    sessionLoaded = true;
+    return sessionCache;
   }
 
-  function getSession(options = {}) {
-    const storage = getStorage(options.storage);
-    const session = readJson(storage, SESSION_KEY, null);
-    if (!session || typeof session !== "object") return null;
-    if (!session.role || !session.username) return null;
-    return session;
+  async function getSession(force = false) {
+    if (sessionLoaded && !force) return sessionCache;
+    const result = await apiRequest("/api/session");
+    if (!result.ok) {
+      sessionLoaded = false;
+      sessionCache = null;
+      return null;
+    }
+
+    if (result.data && result.data.authenticated && result.data.session) {
+      cacheSession(result.data.session);
+    } else {
+      cacheSession(null);
+    }
+    return sessionCache;
   }
 
-  function setSession(session, options = {}) {
-    const storage = getStorage(options.storage);
-    writeJson(storage, SESSION_KEY, session);
+  function setSession(session) {
+    const next = cacheSession(session);
     dispatchAuthChange();
-    return session;
+    return next;
   }
 
-  function logout(options = {}) {
-    const storage = getStorage(options.storage);
-    storage.removeItem(SESSION_KEY);
+  function clearSession() {
+    cacheSession(null);
     dispatchAuthChange();
   }
 
-  async function ensureSeedUsers(options = {}) {
-    const users = getUsers(options);
-    if (users.length > 0) return users;
+  async function ensureSeedUsers() {
+    // Demo seeds are server-managed at startup.
+    await getSession(true);
+    return [];
+  }
 
-    const seeds = [
-      {
-        id: "seed-tenant",
-        fullName: "Atlas Tenant Demo",
-        email: "tenant@atlasbahamas.demo",
-        username: "tenantdemo",
-        role: "tenant",
-        salt: randomSalt(16),
-        createdAt: new Date().toISOString(),
-        seeded: true
-      },
-      {
-        id: "seed-landlord",
-        fullName: "Atlas Landlord Demo",
-        email: "landlord@atlasbahamas.demo",
-        username: "landlorddemo",
-        role: "landlord",
-        salt: randomSalt(16),
-        createdAt: new Date().toISOString(),
-        seeded: true
+  async function registerUser(payload) {
+    const data = payload || {};
+    const policy = passwordPolicyErrors(data.password || "");
+    if (policy.length > 0) {
+      return { ok: false, error: `Password must include: ${policy.join(", ")}.` };
+    }
+
+    const result = await apiRequest("/api/register", {
+      method: "POST",
+      body: {
+        fullName: data.fullName,
+        email: data.email,
+        username: data.username,
+        role: normalizeRole(data.role),
+        password: data.password,
+        passwordConfirm: data.passwordConfirm
       }
-    ];
-
-    seeds[0].passwordHash = await hashPassword("AtlasTenant!2026", seeds[0].salt);
-    seeds[1].passwordHash = await hashPassword("AtlasLandlord!2026", seeds[1].salt);
-
-    saveUsers(seeds, options);
-    return seeds;
-  }
-
-  async function registerUser(payload, options = {}) {
-    const data = payload || {};
-    const fullName = String(data.fullName || "").trim();
-    const email = String(data.email || "").trim().toLowerCase();
-    const username = String(data.username || "").trim().toLowerCase();
-    const password = String(data.password || "");
-    const passwordConfirm = String(data.passwordConfirm || "");
-    const role = normalizeRole(data.role);
-
-    if (!fullName || !email || !username || !password || !passwordConfirm || !role) {
-      return { ok: false, error: "All registration fields are required." };
-    }
-
-    if (password !== passwordConfirm) {
-      return { ok: false, error: "Passwords must match." };
-    }
-
-    const policyErrors = passwordPolicyErrors(password);
-    if (policyErrors.length > 0) {
-      return { ok: false, error: `Password must include: ${policyErrors.join(", ")}.` };
-    }
-
-    const users = getUsers(options);
-    const duplicate = users.find(
-      (u) => String(u.username || "").toLowerCase() === username || String(u.email || "").toLowerCase() === email
-    );
-    if (duplicate) {
-      return { ok: false, error: "Username or email already exists." };
-    }
-
-    const salt = randomSalt(16);
-    const passwordHash = await hashPassword(password, salt);
-
-    const nextUser = {
-      id: `usr-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 9)}`,
-      fullName,
-      email,
-      username,
-      role,
-      salt,
-      passwordHash,
-      createdAt: new Date().toISOString(),
-      seeded: false
-    };
-
-    users.push(nextUser);
-    saveUsers(users, options);
-
-    const session = {
-      userId: nextUser.id,
-      fullName: nextUser.fullName,
-      username: nextUser.username,
-      role: nextUser.role,
-      loginAt: new Date().toISOString()
-    };
-    setSession(session, options);
-
-    return { ok: true, user: nextUser, session };
-  }
-
-  async function loginUser(payload, options = {}) {
-    const data = payload || {};
-    const identifier = String(data.identifier || "").trim().toLowerCase();
-    const password = String(data.password || "");
-    const expectedRole = normalizeRole(data.role);
-
-    if (!identifier || !password) {
-      return { ok: false, error: "Username/email and password are required." };
-    }
-
-    await ensureSeedUsers(options);
-    const users = getUsers(options);
-    const user = users.find((u) => {
-      const email = String(u.email || "").toLowerCase();
-      const username = String(u.username || "").toLowerCase();
-      return email === identifier || username === identifier;
     });
 
-    if (!user) {
-      return { ok: false, error: "Invalid credentials." };
+    if (!result.ok) {
+      return { ok: false, error: result.error };
     }
 
-    if (expectedRole && normalizeRole(user.role) !== expectedRole) {
-      return { ok: false, error: "Selected role does not match this account." };
-    }
-
-    const computedHash = await hashPassword(password, user.salt);
-    if (computedHash !== user.passwordHash) {
-      return { ok: false, error: "Invalid credentials." };
-    }
-
-    const session = {
-      userId: user.id,
-      fullName: user.fullName,
-      username: user.username,
-      role: normalizeRole(user.role),
-      loginAt: new Date().toISOString()
-    };
-
-    setSession(session, options);
-    return { ok: true, session, user };
+    const session = setSession(result.data.session || null);
+    return { ok: true, session, user: result.data.user || null };
   }
 
-  function requireRole(role, options = {}) {
-    const session = getSession(options);
-    if (!session) return { ok: false, reason: "unauthenticated", session: null };
+  async function loginUser(payload) {
+    const data = payload || {};
+    const result = await apiRequest("/api/login", {
+      method: "POST",
+      body: {
+        identifier: data.identifier,
+        password: data.password,
+        role: normalizeRole(data.role)
+      }
+    });
 
+    if (!result.ok) {
+      return { ok: false, error: result.error };
+    }
+
+    const session = setSession(result.data.session || null);
+    return { ok: true, session, user: result.data.user || null };
+  }
+
+  async function logout() {
+    await apiRequest("/api/logout", { method: "POST", body: {} });
+    clearSession();
+    return { ok: true };
+  }
+
+  async function requireRole(role) {
+    const session = await getSession();
+    if (!session) return { ok: false, reason: "unauthenticated", session: null };
     const expected = normalizeRole(role);
     if (!expected) return { ok: true, reason: "ok", session };
-
     if (normalizeRole(session.role) !== expected) {
       return { ok: false, reason: "forbidden", session };
     }
-
     return { ok: true, reason: "ok", session };
   }
 
-  function saveContactSubmission(payload, options = {}) {
-    const storage = getStorage(options.storage);
-    const current = readJson(storage, CONTACT_KEY, []);
-    const entries = Array.isArray(current) ? current : [];
-
-    entries.push({
-      id: `msg-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
-      name: String(payload.name || "").trim(),
-      email: String(payload.email || "").trim(),
-      message: String(payload.message || "").trim(),
-      createdAt: new Date().toISOString()
+  async function saveContactSubmission(payload) {
+    const data = payload || {};
+    const result = await apiRequest("/api/contact", {
+      method: "POST",
+      body: {
+        name: data.name,
+        email: data.email,
+        message: data.message
+      }
     });
+    if (!result.ok) {
+      return { ok: false, error: result.error };
+    }
+    return { ok: true, message: result.data.message || "Message sent." };
+  }
 
-    writeJson(storage, CONTACT_KEY, entries);
-    return entries[entries.length - 1];
+  async function fetchListings() {
+    const result = await apiRequest("/api/listings");
+    if (!result.ok) return { ok: false, error: result.error, listings: [] };
+    return { ok: true, listings: Array.isArray(result.data.listings) ? result.data.listings : [] };
+  }
+
+  async function fetchDashboard(role) {
+    const normalized = normalizeRole(role);
+    const path = normalized === "landlord" ? "/api/dashboard/landlord" : "/api/dashboard/tenant";
+    const result = await apiRequest(path);
+    if (!result.ok) return { ok: false, error: result.error };
+    return { ok: true, data: result.data };
   }
 
   root.AtlasBahamasAuth = {
-    USERS_KEY,
-    SESSION_KEY,
-    CONTACT_KEY,
     normalizeRole,
     roleHome,
     safeNextPath,
     parseQuery,
     passwordPolicyErrors,
-    hashPassword,
-    ensureSeedUsers,
-    getUsers,
-    saveUsers,
     getSession,
     setSession,
-    logout,
+    clearSession,
+    ensureSeedUsers,
     registerUser,
     loginUser,
+    logout,
     requireRole,
-    saveContactSubmission
+    saveContactSubmission,
+    fetchListings,
+    fetchDashboard
   };
 })();

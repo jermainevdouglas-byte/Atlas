@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
-"""Atlas entrypoint (modular)."""
+"""AtlasBahamas development server entrypoint."""
 import os
-from pathlib import Path
 
-ROOT_DIR = Path(__file__).resolve().parent
-os.environ.setdefault("DATABASE_PATH", str(ROOT_DIR / "data" / "atlas.sqlite"))
-os.environ.setdefault("LOG_DIR", str(ROOT_DIR / "data" / "logs"))
-os.environ.setdefault("UPLOAD_DIR", str(ROOT_DIR / "data" / "uploads"))
+from app import app
 
-from atlas_app.core import main
 
 if __name__ == "__main__":
-    main()
+    host = os.getenv("HOST", "0.0.0.0")
+    port = int(os.getenv("PORT", "5000"))
+    app.run(host=host, port=port, debug=False)
 
