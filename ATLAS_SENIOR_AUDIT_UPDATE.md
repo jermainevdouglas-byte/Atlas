@@ -1,59 +1,99 @@
-﻿# Atlas Senior Audit Update (2026-02-19)
+# Atlas Senior Audit Update (2026-02-19)
 
-Applied from `Atlas_Senior_Blueprint_Pack.zip` and hardened with backend API integration:
+## Scope completed
 
-## 1) Constant Top Toolbar
-- Implemented a shared toolbar renderer in `AtlasBahamasShell.js`.
-- Every page mounts the same header via `data-atlas-header`.
-- Atlas brand remains centered and routes to `AtlasBahamasHome.html`.
+This update completed all four requested tracks:
 
-## 2) Home Role Doors (Tenant + Landlord)
-- Rebuilt `AtlasBahamasHome.html` with two centered role doors.
-- Door routing:
-  - `AtlasBahamasLogin.html?role=tenant`
-  - `AtlasBahamasLogin.html?role=landlord`
-- Role actions under each door remain explicit (`Login` / `Register`).
+1. Production hardening pass  
+2. Render deployment setup and go-live prep  
+3. Security/audit package refresh  
+4. Role/workflow/dashboard feature completion
 
-## 3) Server-backed Auth + Session
-- Replaced client-only auth with backend API in `app.py`:
-  - `POST /api/register`
-  - `POST /api/login`
-  - `POST /api/logout`
-  - `GET /api/session`
-  - `GET /api/dashboard/tenant`
-  - `GET /api/dashboard/landlord`
-  - `POST /api/contact`
-  - `GET /api/listings`
-- Passwords are hashed using PBKDF2-HMAC-SHA256 with per-user salt.
-- Secure Flask session cookies are enabled with env-controlled flags.
-- Login attempt throttling added for brute-force resistance.
-- Security headers and CSP are applied on responses.
+## 1) Production hardening pass
 
-## 4) Frontend API Wiring
-- `AtlasBahamasAuth.js` now calls backend endpoints instead of localStorage identity.
-- `AtlasBahamasShell.js` now resolves session asynchronously.
-- Login/register/contact/listings/dashboard scripts updated to async API flow.
+### Backend hardening (`app.py`)
+- Added production startup checks:
+  - `PROD_MODE=1` now requires a non-placeholder `SECRET_KEY`.
+- Added host and transport guards:
+  - `ALLOWED_HOSTS` enforcement
+  - HTTPS enforcement via `ENFORCE_HTTPS`
+- Added CSRF protection for API write routes:
+  - token issued via session (`/api/session`, login/register responses)
+  - token required for `POST/PUT/PATCH/DELETE` except login/register
+- Added stronger cookie/runtime defaults:
+  - secure cookie support via `FORCE_SECURE_COOKIES` and `COOKIE_SECURE`
+  - `SESSION_COOKIE_SAMESITE` support
+- Added persistent login lockout table and logic:
+  - DB-backed login attempts with lock window
+  - optional Redis mirror for distributed rate-limiting
+- Health endpoint now reports DB/Redis status for go-live checks.
 
-## 5) Runtime Entrypoints
-- `wsgi.py` now serves the Flask runtime used by Gunicorn.
-- `server.py` updated for direct local Flask run.
-- Legacy handler runtime preserved in `wsgi_legacy.py`.
+### Secret management files
+- Refreshed `AtlasBahamas.env` (gitignored) with generated strong random secrets.
+- Updated `AtlasBahamas.env.example` to align with hardened runtime.
+- Updated `.env.production` to production-safe values:
+  - `SEED_DEMO_USERS=0`
+  - secure cookie flags enabled
+  - production host/CSRF settings
 
-## 6) Audit Checklist Updates
-- Constant navigation and role-consistent routing
-- Semantic form markup retained
-- Runtime secret file remains excluded from git (`AtlasBahamas.env`)
-- Workflow static trigger still includes all JS (`*.js`)
+## 2) Render deployment setup
 
-## 7) Validation Results
-- `node --check *.js` -> PASS
+- Replaced `render.yaml` with current architecture:
+  - `atlasbahamas-web` (Python web service)
+  - `atlasbahamas-redis` (managed Redis)
+  - persistent disk mount `/var/data`
+  - SQLite db path `/var/data/atlasbahamas.sqlite`
+  - secure defaults + generated `SECRET_KEY`
+- Updated `RENDER_DEPLOYMENT.md` with current go-live sequence and checks.
+- Simplified `docker-compose.yml` to match the active Flask + Redis stack.
+
+## 3) Security/audit package refresh
+
+- This report reflects current hardening and workflow behavior.
+- Validation commands executed successfully (see results below).
+- A downloadable auditor archive was generated from current repo state.
+
+## 4) Feature completion: roles/workflows/dashboards
+
+### New workflow API routes
+- `GET /api/workflow/payments`
+- `POST /api/workflow/payment` (tenant submit)
+- `POST /api/workflow/payment/<id>/status` (landlord review)
+- `GET /api/workflow/maintenance`
+- `POST /api/workflow/maintenance` (tenant submit)
+- `POST /api/workflow/maintenance/<id>/status` (landlord update)
+
+### Dashboard behavior
+- Tenant dashboard:
+  - live KPI values from DB
+  - submit rent payment form
+  - submit maintenance request form
+  - payment + maintenance history lists
+- Landlord dashboard:
+  - live KPI values from DB
+  - pending payment review queue (receive/reject)
+  - maintenance queue status updates
+
+### Frontend integration updates
+- `AtlasBahamasAuth.js`:
+  - CSRF token cache + auto-attach for write requests
+  - retry-on-CSRF-refresh behavior
+  - new workflow client methods
+- `AtlasBahamasDashboard.js`:
+  - role-based dynamic rendering
+  - workflow submissions and status updates
+- Dashboard HTML and CSS updated for production-ready forms/queues.
+
+## Validation results
+
+- `node --check AtlasBahamasAuth.js` -> PASS
+- `node --check AtlasBahamasDashboard.js` -> PASS
 - `node tests/atlas_auth_flow_test.js` -> PASS
 - `py -3 tests/atlas_static_smoke_test.py` -> PASS
 - `py -3 tests/atlas_api_integration_test.py` -> PASS
-- `py -3 -m compileall -q app.py server.py wsgi.py wsgi_legacy.py` -> PASS
+- `py -3 -m compileall app.py` -> PASS
 
-## 8) Notes
-- Demo users are server-seeded by default when DB is empty:
-  - tenantdemo / AtlasTenant!2026
-  - landlorddemo / AtlasLandlord!2026
-- For production launch, set `SEED_DEMO_USERS=0` and configure real credentials/env secrets.
+## Residual notes
+
+- `SEED_DEMO_USERS` is now off by default in production templates.
+- For Render launch, keep `SECRET_KEY` and deploy credentials only in Render/GitHub secret stores.

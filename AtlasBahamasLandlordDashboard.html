@@ -27,39 +27,35 @@
       <section class="kpi-grid" aria-label="Landlord KPIs">
         <article class="kpi">
           <div class="kpi-label">Properties</div>
-          <div class="kpi-value">4</div>
+          <div class="kpi-value" data-kpi-properties>0</div>
         </article>
         <article class="kpi">
           <div class="kpi-label">Occupied</div>
-          <div class="kpi-value">3</div>
+          <div class="kpi-value" data-kpi-occupied>0</div>
         </article>
         <article class="kpi">
           <div class="kpi-label">Monthly Revenue</div>
-          <div class="kpi-value">$4.8k</div>
+          <div class="kpi-value" data-kpi-monthly-revenue>$0.00</div>
         </article>
         <article class="kpi">
           <div class="kpi-label">Open Requests</div>
-          <div class="kpi-value">2</div>
+          <div class="kpi-value" data-kpi-open-requests>0</div>
         </article>
       </section>
 
-      <section class="action-grid" aria-label="Landlord actions">
-        <article class="action-card">
-          <h3>Manage Properties</h3>
-          <p>Review occupancy, unit conditions, and listing readiness.</p>
-          <button class="primary-btn" type="button" data-dashboard-action data-title="Properties panel" data-message="Property grid opened for review.">View Portfolio</button>
+      <div id="atlasLandlordNotice"></div>
+
+      <section class="workflow-grid" aria-label="Landlord review queues">
+        <article class="card workflow-card">
+          <h3>Pending Rent Reviews</h3>
+          <p class="muted">Approve or reject submitted tenant payments.</p>
+          <ul class="workflow-list" id="landlordPaymentQueue"></ul>
         </article>
 
-        <article class="action-card">
-          <h3>Schedule Inspection</h3>
-          <p>Set periodic checks and track completion states.</p>
-          <button class="secondary-btn" type="button" data-dashboard-action data-title="Inspection scheduling" data-message="Inspection request saved.">Schedule</button>
-        </article>
-
-        <article class="action-card">
-          <h3>Review Requests</h3>
-          <p>Open maintenance, inquiries, and pending tenant actions.</p>
-          <button class="ghost-btn" type="button" data-dashboard-action data-title="Request center" data-message="Request queue opened.">Open Queue</button>
+        <article class="card workflow-card">
+          <h3>Maintenance Queue</h3>
+          <p class="muted">Track open requests and update service status.</p>
+          <ul class="workflow-list" id="landlordMaintenanceQueue"></ul>
         </article>
       </section>
     </div>

@@ -1,29 +1,24 @@
-databases:
-  - name: atlas-postgres
-    databaseName: atlas
-    user: atlas
-    plan: basic-1gb
-
 services:
   - type: redis
-    name: atlas-redis
+    name: atlasbahamas-redis
     plan: starter
     ipAllowList: []
 
   - type: web
-    name: atlas-web
-    env: docker
-    plan: standard
+    name: atlasbahamas-web
+    env: python
+    plan: starter
     autoDeploy: true
-    dockerfilePath: ./Dockerfile
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 3 --threads 6 --timeout 90 wsgi:app
     healthCheckPath: /health
     disk:
-      name: atlas-data
+      name: atlasbahamas-data
       mountPath: /var/data
-      sizeGB: 10
+      sizeGB: 5
     envVars:
-      - key: HOST
-        value: 0.0.0.0
+      - key: PYTHON_VERSION
+        value: 3.12.8
       - key: PROD_MODE
         value: "1"
       - key: ENFORCE_HTTPS
@@ -34,70 +29,28 @@ services:
         value: "1"
       - key: SESSION_COOKIE_SAMESITE
         value: Strict
-      - key: CSRF_COOKIE_SAMESITE
-        value: Strict
       - key: SECURITY_HEADERS_ENABLED
         value: "1"
+      - key: SESSION_TIMEOUT_MINUTES
+        value: "30"
+      - key: MAX_LOGIN_ATTEMPTS
+        value: "5"
+      - key: LOGIN_ATTEMPT_TIMEOUT_MINUTES
+        value: "15"
+      - key: PASSWORD_HASH_ROUNDS
+        value: "240000"
       - key: ALLOWED_HOSTS
-        value: .onrender.com,localhost,127.0.0.1
+        value: .onrender.com
       - key: CSRF_TRUSTED_HOSTS
-        value: .onrender.com,localhost,127.0.0.1
-      - key: DATABASE_PATH
-        value: /var/data/atlas.sqlite
-      - key: STORAGE_ROOT
-        value: /var/data/storage
-      - key: UPLOAD_DIR
-        value: /var/data/uploads
-      - key: LOG_DIR
-        value: /var/data/logs
-      - key: LOG_FILE
-        value: /var/data/logs/atlas.log
-      - key: BACKUP_DIR
-        value: /var/data/backups
-      - key: POSTGRES_REQUIRED
-        value: "1"
-      - key: POSTGRES_DSN
-        fromDatabase:
-          name: atlas-postgres
-          property: connectionString
-      - key: POSTGRES_HOST
-        fromDatabase:
-          name: atlas-postgres
-          property: host
-      - key: POSTGRES_PORT
-        fromDatabase:
-          name: atlas-postgres
-          property: port
-      - key: POSTGRES_DB
-        fromDatabase:
-          name: atlas-postgres
-          property: database
-      - key: POSTGRES_USER
-        fromDatabase:
-          name: atlas-postgres
-          property: user
-      - key: POSTGRES_PASSWORD
-        fromDatabase:
-          name: atlas-postgres
-          property: password
-      - key: REDIS_SESSIONS_ENABLED
-        value: "1"
+        value: .onrender.com
+      - key: ATLASBAHAMAS_DB_PATH
+        value: /var/data/atlasbahamas.sqlite
+      - key: SEED_DEMO_USERS
+        value: "0"
       - key: REDIS_URL
         fromService:
           type: redis
-          name: atlas-redis
+          name: atlasbahamas-redis
           property: connectionString
-      - key: CLEAR_SESSIONS_ON_START
-        value: "0"
       - key: SECRET_KEY
-        sync: false
-      - key: BOOTSTRAP_ADMIN_FULL_NAME
-        value: Atlas Administrator
-      - key: BOOTSTRAP_ADMIN_PHONE
-        sync: false
-      - key: BOOTSTRAP_ADMIN_EMAIL
-        sync: false
-      - key: BOOTSTRAP_ADMIN_USERNAME
-        sync: false
-      - key: BOOTSTRAP_ADMIN_PASSWORD
-        sync: false
+        generateValue: true

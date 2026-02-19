@@ -3,6 +3,7 @@
 
   let sessionCache = null;
   let sessionLoaded = false;
+  let csrfTokenCache = "";
 
   function normalizeRole(role) {
     const value = String(role || "").trim().toLowerCase();
@@ -63,6 +64,20 @@
     }
   }
 
+  function isWriteMethod(method) {
+    return ["POST", "PUT", "PATCH", "DELETE"].includes(String(method || "").toUpperCase());
+  }
+
+  function isCsrfExempt(path) {
+    const value = String(path || "").toLowerCase();
+    return value === "/api/login" || value === "/api/register";
+  }
+
+  function updateCsrfToken(token) {
+    csrfTokenCache = typeof token === "string" ? token : "";
+    return csrfTokenCache;
+  }
+
   async function apiRequest(path, options = {}) {
     const method = String(options.method || "GET").toUpperCase();
     const body = options.body;
@@ -70,6 +85,15 @@
       Accept: "application/json",
       ...(options.headers || {})
     };
+
+    if (isWriteMethod(method) && !isCsrfExempt(path)) {
+      if (!csrfTokenCache) {
+        await getSession(true);
+      }
+      if (csrfTokenCache) {
+        headers["X-CSRF-Token"] = csrfTokenCache;
+      }
+    }
 
     const fetchOptions = {
       method,
@@ -101,12 +125,26 @@
     }
 
     if (!response.ok || payload.ok === false) {
+      const err = String(payload.error || "");
+      if (
+        response.status === 400 &&
+        err.toLowerCase().includes("csrf") &&
+        !options._retried &&
+        !isCsrfExempt(path)
+      ) {
+        await getSession(true);
+        return apiRequest(path, { ...options, _retried: true });
+      }
       return {
         ok: false,
         status: response.status,
         error: payload.error || `Request failed (${response.status})`,
         data: payload
       };
+    }
+
+    if (payload && payload.csrfToken) {
+      updateCsrfToken(payload.csrfToken);
     }
 
     return { ok: true, status: response.status, data: payload };
@@ -127,6 +165,10 @@
       return null;
     }
 
+    if (result.data && result.data.csrfToken) {
+      updateCsrfToken(result.data.csrfToken);
+    }
+
     if (result.data && result.data.authenticated && result.data.session) {
       cacheSession(result.data.session);
     } else {
@@ -144,6 +186,10 @@
   function clearSession() {
     cacheSession(null);
     dispatchAuthChange();
+  }
+
+  function getCsrfToken() {
+    return csrfTokenCache;
   }
 
   async function ensureSeedUsers() {
@@ -175,6 +221,9 @@
       return { ok: false, error: result.error };
     }
 
+    if (result.data && result.data.csrfToken) {
+      updateCsrfToken(result.data.csrfToken);
+    }
     const session = setSession(result.data.session || null);
     return { ok: true, session, user: result.data.user || null };
   }
@@ -194,6 +243,9 @@
       return { ok: false, error: result.error };
     }
 
+    if (result.data && result.data.csrfToken) {
+      updateCsrfToken(result.data.csrfToken);
+    }
     const session = setSession(result.data.session || null);
     return { ok: true, session, user: result.data.user || null };
   }
@@ -201,6 +253,7 @@
   async function logout() {
     await apiRequest("/api/logout", { method: "POST", body: {} });
     clearSession();
+    await getSession(true);
     return { ok: true };
   }
 
@@ -245,6 +298,72 @@
     return { ok: true, data: result.data };
   }
 
+  async function submitRentPayment(payload) {
+    const data = payload || {};
+    const result = await apiRequest("/api/workflow/payment", {
+      method: "POST",
+      body: {
+        amount: data.amount,
+        paymentMonth: data.paymentMonth,
+        note: data.note || ""
+      }
+    });
+    if (!result.ok) return { ok: false, error: result.error };
+    return { ok: true, payment: result.data.payment };
+  }
+
+  async function fetchPayments() {
+    const result = await apiRequest("/api/workflow/payments");
+    if (!result.ok) return { ok: false, error: result.error, payments: [] };
+    return { ok: true, payments: Array.isArray(result.data.payments) ? result.data.payments : [] };
+  }
+
+  async function reviewPayment(paymentId, status, note = "") {
+    const id = Number(paymentId || 0);
+    if (!Number.isFinite(id) || id <= 0) {
+      return { ok: false, error: "Invalid payment id." };
+    }
+    const result = await apiRequest(`/api/workflow/payment/${id}/status`, {
+      method: "POST",
+      body: { status, note }
+    });
+    if (!result.ok) return { ok: false, error: result.error };
+    return { ok: true, payment: result.data.payment };
+  }
+
+  async function createMaintenanceRequest(payload) {
+    const data = payload || {};
+    const result = await apiRequest("/api/workflow/maintenance", {
+      method: "POST",
+      body: {
+        subject: data.subject,
+        details: data.details,
+        severity: data.severity || "medium"
+      }
+    });
+    if (!result.ok) return { ok: false, error: result.error };
+    return { ok: true, request: result.data.request };
+  }
+
+  async function fetchMaintenanceRequests() {
+    const result = await apiRequest("/api/workflow/maintenance");
+    if (!result.ok) return { ok: false, error: result.error, requests: [] };
+    return { ok: true, requests: Array.isArray(result.data.requests) ? result.data.requests : [] };
+  }
+
+  async function updateMaintenanceStatus(requestId, status) {
+    const id = Number(requestId || 0);
+    if (!Number.isFinite(id) || id <= 0) {
+      return { ok: false, error: "Invalid maintenance request id." };
+    }
+    const result = await apiRequest(`/api/workflow/maintenance/${id}/status`, {
+      method: "POST",
+      body: { status }
+    });
+    if (!result.ok) return { ok: false, error: result.error };
+    return { ok: true, request: result.data.request };
+  }
+
   root.AtlasBahamasAuth = {
     normalizeRole,
     roleHome,
@@ -252,6 +371,7 @@
     parseQuery,
     passwordPolicyErrors,
     getSession,
+    getCsrfToken,
     setSession,
     clearSession,
     ensureSeedUsers,
@@ -261,6 +381,12 @@
     requireRole,
     saveContactSubmission,
     fetchListings,
-    fetchDashboard
+    fetchDashboard,
+    submitRentPayment,
+    fetchPayments,
+    reviewPayment,
+    createMaintenanceRequest,
+    fetchMaintenanceRequests,
+    updateMaintenanceStatus
   };
 })();
