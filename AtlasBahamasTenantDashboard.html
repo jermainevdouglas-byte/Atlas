@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tenant Dashboard | AtlasBahamas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="AtlasBahamasVisualIdentity.css">
+  <script src="AtlasBahamasAuth.js" defer></script>
+  <script src="AtlasBahamasShell.js" defer></script>
+  <script src="AtlasBahamasDashboard.js" defer></script>
+</head>
+<body>
+  <header class="header" data-atlas-header></header>
+
+  <main class="public">
+    <div class="public-inner" data-dashboard-root data-role="tenant">
+      <div class="public-header">
+        <div>
+          <h2>Tenant Dashboard</h2>
+          <p class="muted">Welcome back, <span data-welcome-name>Tenant</span>.</p>
+        </div>
+      </div>
+
+      <section class="kpi-grid" aria-label="Tenant KPIs">
+        <article class="kpi">
+          <div class="kpi-label">Rent Due</div>
+          <div class="kpi-value">$1,250</div>
+        </article>
+        <article class="kpi">
+          <div class="kpi-label">Due Date</div>
+          <div class="kpi-value">5 days</div>
+        </article>
+        <article class="kpi">
+          <div class="kpi-label">Open Requests</div>
+          <div class="kpi-value">1</div>
+        </article>
+        <article class="kpi">
+          <div class="kpi-label">Receipts</div>
+          <div class="kpi-value">12</div>
+        </article>
+      </section>
+
+      <section class="action-grid" aria-label="Tenant actions">
+        <article class="action-card">
+          <h3>Pay Rent</h3>
+          <p>Submit rent and capture receipt details in one flow.</p>
+          <button class="primary-btn" type="button" data-dashboard-action data-title="Rent flow opened" data-message="Payment step sequence is ready for backend processing.">Start Payment</button>
+        </article>
+
+        <article class="action-card">
+          <h3>Request Maintenance</h3>
+          <p>Send issue severity and required notes directly to management.</p>
+          <button class="secondary-btn" type="button" data-dashboard-action data-title="Maintenance request" data-message="Request captured and placed in queue.">Create Request</button>
+        </article>
+
+        <article class="action-card">
+          <h3>Payment History</h3>
+          <p>Review transaction summaries and prior confirmations.</p>
+          <button class="ghost-btn" type="button" data-dashboard-action data-title="History panel" data-message="History view opened for this user.">Open History</button>
+        </article>
+      </section>
+    </div>
+
+    <div id="atlasToast" class="toast" role="status" aria-live="polite">
+      <div class="toast-title">Done</div>
+      <div class="toast-msg"></div>
+    </div>
+  </main>
+</body>
+</html>

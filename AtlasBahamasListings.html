@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -8,36 +8,50 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="AtlasBahamasVisualIdentity.css">
+  <script src="AtlasBahamasAuth.js" defer></script>
+  <script src="AtlasBahamasShell.js" defer></script>
+  <script src="AtlasBahamasListings.js" defer></script>
 </head>
 <body>
-  <header class="header">
-    <nav class="nav container">
-      <div class="nav-left">
-        <a class="pill" href="AtlasBahamasLogin.html">Login</a>
-        <a class="pill" href="AtlasBahamasAbout.html">About</a>
-        <a class="pill" href="AtlasBahamasContact.html">Contact Us</a>
-      </div>
-      <a class="brand" href="AtlasBahamasHome.html">Atlas</a>
-      <div class="nav-right">
-        <a class="pill" href="AtlasBahamasRegister.html">Register</a>
-        <a class="pill" href="AtlasBahamasListings.html">Listings</a>
-      </div>
-    </nav>
-  </header>
+  <header class="header" data-atlas-header></header>
 
-  <section class="public">
+  <main class="public">
     <div class="public-inner">
       <div class="public-header">
         <div>
           <h2>Listings</h2>
-          <p class="muted">Featured properties and current opportunities.</p>
+          <p class="muted">Browse current opportunities and request viewings.</p>
         </div>
       </div>
 
-      <div class="card">
-        <p>Listings page is active and ready for property data integration.</p>
-      </div>
+      <section class="listing-grid" aria-label="Property listings">
+        <article class="card">
+          <h3>Coral Heights 4B</h3>
+          <p style="margin-top: 8px;">2 bed, 1 bath, Nassau. Bright corner unit with balcony.</p>
+          <p style="margin-top: 8px;"><strong>$1,250/mo</strong></p>
+          <button class="primary-btn" type="button" data-listing-action data-listing-name="Coral Heights 4B">Request Viewing</button>
+        </article>
+
+        <article class="card">
+          <h3>Harbor Walk 2A</h3>
+          <p style="margin-top: 8px;">1 bed, 1 bath, near downtown and transit corridors.</p>
+          <p style="margin-top: 8px;"><strong>$1,050/mo</strong></p>
+          <button class="primary-btn" type="button" data-listing-action data-listing-name="Harbor Walk 2A">Request Viewing</button>
+        </article>
+
+        <article class="card">
+          <h3>Ocean Ridge 7C</h3>
+          <p style="margin-top: 8px;">3 bed, 2 bath, ocean-facing family unit.</p>
+          <p style="margin-top: 8px;"><strong>$1,780/mo</strong></p>
+          <button class="primary-btn" type="button" data-listing-action data-listing-name="Ocean Ridge 7C">Request Viewing</button>
+        </article>
+      </section>
     </div>
-  </section>
+
+    <div id="atlasToast" class="toast" role="status" aria-live="polite">
+      <div class="toast-title">Done</div>
+      <div class="toast-msg"></div>
+    </div>
+  </main>
 </body>
 </html>

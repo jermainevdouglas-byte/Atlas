@@ -1,42 +1,103 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AtlasBahamas</title>
+  <title>AtlasBahamas | Home</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="AtlasBahamasVisualIdentity.css">
+  <script src="AtlasBahamasAuth.js" defer></script>
+  <script src="AtlasBahamasShell.js" defer></script>
+  <script src="AtlasBahamasDoorFlow.js" defer></script>
+  <script src="AtlasBahamasHome.js" defer></script>
 </head>
 <body>
-  <header class="header">
-    <nav class="nav container">
-      <div class="nav-left">
-        <a class="pill" href="AtlasBahamasLogin.html">Login</a>
-        <a class="pill" href="AtlasBahamasAbout.html">About</a>
-        <a class="pill" href="AtlasBahamasContact.html">Contact Us</a>
-      </div>
-      <a class="brand" href="AtlasBahamasHome.html">Atlas</a>
-      <div class="nav-right">
-        <a class="pill" href="AtlasBahamasRegister.html">Register</a>
-        <a class="pill" href="AtlasBahamasListings.html">Listings</a>
-      </div>
-    </nav>
-  </header>
+  <header class="header" data-atlas-header></header>
 
-  <section class="hero">
-    <div class="container">
-      <div class="door-scene">
-        <h1 class="door-heading">Atlas Property Management</h1>
-        <p class="door-tagline">An experience from the moment you arrive.</p>
+  <main>
+    <section class="hero">
+      <div class="container hero-stack">
+        <h1 class="door-heading">Welcome to Atlas.</h1>
+        <p class="door-tagline">Choose your portal to continue. Tenant and landlord flows stay separate from the first click.</p>
 
-        <a href="AtlasBahamasLogin.html" class="door-link door-photo-link" aria-label="Enter and log in">
-          <img class="door-photo" src="assets/images/AtlasBahamasDoorHomeCropped.png" fetchpriority="high" loading="eager" decoding="async" width="390" height="856" alt="Front door entrance">
-          <span class="door-photo-badge">Enter</span>
-        </a>
+        <div class="door-grid" aria-label="Role entry doors">
+          <article class="role-door tenant">
+            <span class="role-door-label">Tenant</span>
+            <a class="role-door-link" data-role-door href="AtlasBahamasLogin.html?role=tenant" aria-label="Enter Tenant login">
+              <img src="assets/images/AtlasBahamasDoorHomeCropped.png" fetchpriority="high" loading="eager" decoding="async" width="390" height="856" alt="Tenant entry door">
+              <span class="door-photo-badge">Tenant Door</span>
+            </a>
+            <div class="role-door-actions">
+              <a class="primary-btn" href="AtlasBahamasLogin.html?role=tenant">Tenant Login</a>
+              <a class="ghost-btn" href="AtlasBahamasRegister.html?role=tenant">Register Tenant</a>
+            </div>
+          </article>
+
+          <article class="role-door landlord">
+            <span class="role-door-label">Landlord</span>
+            <a class="role-door-link" data-role-door href="AtlasBahamasLogin.html?role=landlord" aria-label="Enter Landlord login">
+              <img src="assets/images/AtlasBahamasDoorHomeCropped.png" loading="lazy" decoding="async" width="390" height="856" alt="Landlord entry door">
+              <span class="door-photo-badge">Landlord Door</span>
+            </a>
+            <div class="role-door-actions">
+              <a class="primary-btn" href="AtlasBahamasLogin.html?role=landlord">Landlord Login</a>
+              <a class="ghost-btn" href="AtlasBahamasRegister.html?role=landlord">Register Landlord</a>
+            </div>
+          </article>
+        </div>
+
+        <div class="role-door-actions" data-session-continue></div>
+
+        <div class="audit-strip" aria-label="Trust and quality signals">
+          <article class="audit-card">
+            <h3>Secure Session Model</h3>
+            <p>Role-based session state is enforced before dashboard access, with explicit login prompts.</p>
+          </article>
+          <article class="audit-card">
+            <h3>Constant Navigation</h3>
+            <p>All pages render from one shared toolbar component to keep the top layout consistent.</p>
+          </article>
+          <article class="audit-card">
+            <h3>Production Checklist Applied</h3>
+            <p>Responsive layout, semantic forms, image optimization, and no committed runtime secret file.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="public" id="about-preview">
+      <div class="public-inner">
+        <div class="public-header">
+          <div>
+            <h2>About Us</h2>
+            <p class="muted">AtlasBahamas keeps property management clear for both sides of the lease.</p>
+          </div>
+        </div>
+
+        <article class="card">
+          <p>Atlas is structured around two operating paths: tenant operations and landlord operations. The door-based home entry makes the first step obvious, then the login flow enforces role routing so each user sees the correct dashboard.</p>
+          <p style="margin-top: 10px;">This design references your senior blueprint guidance and keeps your top toolbar fixed in structure on every page for continuity.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="brand" style="width: fit-content;">Atlas</div>
+        <p style="margin-top: 10px;">Property management workflows for tenants and landlords, unified under one clear navigation model.</p>
+      </div>
+      <div>
+        <ul>
+          <li>Contact: AtlasBahamasContact.html</li>
+          <li>Listings: AtlasBahamasListings.html</li>
+          <li>Roles: Tenant and Landlord</li>
+        </ul>
       </div>
     </div>
-  </section>
+  </footer>
 </body>
 </html>

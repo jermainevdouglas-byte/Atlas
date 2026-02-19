@@ -1,9 +1,11 @@
-AtlasBahamas.env
+﻿AtlasBahamas.env
 
 # Secrets and local env
 .env
 .env.local
+.env.*
 .env.*.local
+*.local.env
 
 # Python cache/build artifacts
 __pycache__/
@@ -32,6 +34,9 @@ AUDIT_REPORT_*.txt
 complete_website_code.txt
 server_code.txt
 current_code_snapshot_*.txt
+
+# Node/dep artifacts
+node_modules/
 
 # IDE and OS
 .vscode/

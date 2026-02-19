@@ -1,25 +1,21 @@
-(() => {
-  const doorLink = document.querySelector(".door-link");
-  if (!doorLink) return;
+﻿(() => {
+  document.addEventListener("DOMContentLoaded", () => {
+    const links = document.querySelectorAll("[data-role-door]");
+    if (!links.length) return;
 
-  const targetSelector = doorLink.getAttribute("href");
-  const target = targetSelector?.startsWith("#") ? document.querySelector(targetSelector) : null;
+    links.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const href = link.getAttribute("href");
+        if (!href) return;
 
-  doorLink.addEventListener("click", (event) => {
-    if (!target) return;
-    event.preventDefault();
+        event.preventDefault();
+        link.classList.add("opening");
+        document.body.classList.add("door-open");
 
-    document.body.classList.add("door-open");
-    window.setTimeout(() => {
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 180);
+        window.setTimeout(() => {
+          window.location.href = href;
+        }, 180);
+      });
+    });
   });
-
-  const resetDoorState = () => {
-    if (window.scrollY <= window.innerHeight * 0.25) {
-      document.body.classList.remove("door-open");
-    }
-  };
-
-  window.addEventListener("scroll", resetDoorState, { passive: true });
 })();

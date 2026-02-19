@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -8,41 +8,37 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="AtlasBahamasVisualIdentity.css">
+  <script src="AtlasBahamasAuth.js" defer></script>
+  <script src="AtlasBahamasShell.js" defer></script>
 </head>
 <body>
-  <header class="header">
-    <nav class="nav container">
-      <div class="nav-left">
-        <a class="pill" href="AtlasBahamasLogin.html">Login</a>
-        <a class="pill" href="AtlasBahamasAbout.html">About</a>
-        <a class="pill" href="AtlasBahamasContact.html">Contact Us</a>
-      </div>
-      <a class="brand" href="AtlasBahamasHome.html">Atlas</a>
-      <div class="nav-right">
-        <a class="pill" href="AtlasBahamasRegister.html">Register</a>
-        <a class="pill" href="AtlasBahamasListings.html">Listings</a>
-      </div>
-    </nav>
-  </header>
+  <header class="header" data-atlas-header></header>
 
-  <section class="public">
+  <main class="public">
     <div class="public-inner">
       <div class="public-header">
         <div>
           <h2>About Atlas</h2>
-          <p class="muted">Built around clarity, trust, and smooth navigation.</p>
+          <p class="muted">Built for role clarity, operational trust, and repeatable workflows.</p>
         </div>
       </div>
 
-      <div class="card" style="max-width:760px;">
-        <p>
-          AtlasBahamas is designed to feel intentional from the very first click. The homepage door is the center entry point and takes users directly to login.
-        </p>
-        <p style="margin-top:12px;">
-          The interface is kept minimal and focused, with strong hierarchy and clear paths between pages.
-        </p>
-      </div>
+      <article class="card">
+        <p>AtlasBahamas is structured around one practical principle: each user should know exactly where to go next. Tenant and landlord journeys are separated at the homepage door entry, then routed through role-specific authentication.</p>
+        <p style="margin-top: 10px;">The top toolbar remains constant across all pages through a shared shell renderer, so users always keep orientation while moving between About, Contact, Listings, Login, and dashboards.</p>
+      </article>
+
+      <section class="grid-two" aria-label="Operating priorities">
+        <article class="card">
+          <h3>Tenant Priorities</h3>
+          <p style="margin-top: 8px;">Rent tracking, maintenance requests, and payment history with minimal steps.</p>
+        </article>
+        <article class="card">
+          <h3>Landlord Priorities</h3>
+          <p style="margin-top: 8px;">Portfolio visibility, request status, occupancy signal, and fast task actions.</p>
+        </article>
+      </section>
     </div>
-  </section>
+  </main>
 </body>
 </html>
