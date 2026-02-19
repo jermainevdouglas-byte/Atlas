@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In | AtlasBahamas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="AtlasBahamasVisualIdentity.css">
+</head>
+<body>
+  <header class="header">
+    <nav class="nav container">
+      <div></div>
+      <a class="brand" href="AtlasBahamasHome.html">Atlas</a>
+      <div></div>
+    </nav>
+  </header>
+
+  <section class="public">
+    <div class="public-inner">
+      <div class="public-header">
+        <div>
+          <h2>Log in</h2>
+          <p class="muted">Enter your credentials to continue.</p>
+        </div>
+      </div>
+
+      <div class="card" style="max-width:520px;">
+        <div id="atlasLoginMessage"></div>
+        <form id="atlasLoginForm" style="margin-top:12px;">
+          <div class="field">
+            <label for="atlas-username">Username</label>
+            <input id="atlas-username" name="username" required autocomplete="username">
+          </div>
+          <div class="field" style="margin-top:10px;">
+            <label for="atlas-password">Password</label>
+            <input id="atlas-password" type="password" name="password" required autocomplete="current-password">
+          </div>
+          <button class="primary-btn" style="margin-top:12px;width:100%;" type="submit">Log in</button>
+        </form>
+        <p class="muted" style="margin:12px 0 0;">Demo mode: login form prompt is active.</p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (() => {
+      const form = document.getElementById("atlasLoginForm");
+      const message = document.getElementById("atlasLoginMessage");
+      if (!form || !message) return;
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const username = form.username.value.trim();
+        const password = form.password.value.trim();
+        if (!username || !password) {
+          message.innerHTML = '<div class="notice err"><b>Login failed:</b> Missing fields.</div>';
+          return;
+        }
+        message.innerHTML = '<div class="notice"><b>Login prompt received.</b> Backend auth can be connected next.</div>';
+      });
+    })();
+  </script>
+</body>
+</html>

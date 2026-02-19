@@ -9,33 +9,32 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="AtlasBahamasVisualIdentity.css">
 </head>
-<body class="home-page">
-  <header class="hero" id="top">
-    <h1 class="hero-title">Welcome to Atlas.</h1>
-
-    <a class="door-link" href="#about-us" aria-label="Enter Atlas">
-      <figure class="door-card">
-        <img src="assets/images/AtlasBahamasDoorHome.webp" alt="Dark blue entry door">
-        <span class="door-glow" aria-hidden="true"></span>
-      </figure>
-    </a>
+<body>
+  <header class="header">
+    <nav class="nav container">
+      <div></div>
+      <a class="brand" href="AtlasBahamasHome.html">Atlas</a>
+      <div></div>
+    </nav>
   </header>
 
-  <main id="home-content" aria-label="Homepage content">
-    <section class="panel about-panel" id="about-us">
-      <h2>About Us</h2>
-      <p>
-        Atlas is a clean, focused digital front door for our brand. We keep the experience simple, polished, and direct so visitors can move with confidence.
-      </p>
-      <p>
-        The entrance interaction stays intentional: click the door and transition naturally into the rest of the homepage.
-      </p>
-      <p class="more-link-wrap">
-        <a class="secondary-link" href="AtlasBahamasAbout.html">Open full About page</a>
-      </p>
-    </section>
-  </main>
+  <section class="hero">
+    <div class="container">
+      <div class="door-scene">
+        <h1 class="door-heading">Atlas Property Management</h1>
+        <p class="door-tagline">An experience from the moment you arrive.</p>
 
-  <script src="AtlasBahamasDoorFlow.js"></script>
+        <a href="AtlasBahamasLogin.html" class="door-link door-photo-link" aria-label="Enter and log in">
+          <img class="door-photo" src="assets/images/AtlasBahamasDoorHome.webp" fetchpriority="high" loading="eager" decoding="async" width="900" height="1500" alt="Front door entrance">
+          <span class="door-photo-badge">Enter</span>
+        </a>
+
+        <div class="row center-row">
+          <a class="secondary-btn" href="AtlasBahamasLogin.html">Log in</a>
+          <a class="ghost-btn" href="AtlasBahamasAbout.html">About Atlas</a>
+        </div>
+      </div>
+    </div>
+  </section>
 </body>
 </html>

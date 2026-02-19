@@ -1,263 +1,273 @@
 :root {
-  --bg-1: #040811;
-  --bg-2: #071631;
-  --bg-3: #0e2b58;
-  --ink: #dce9ff;
-  --ink-soft: #a4b9df;
-  --line: rgba(164, 200, 255, 0.28);
-  --surface: rgba(10, 21, 45, 0.78);
-  --glow: rgba(126, 188, 255, 0.34);
-  --accent: #d7a56d;
+  --bg0: #05070f;
+  --bg1: #0b1225;
+  --text: rgba(255, 255, 255, 0.92);
+  --muted: rgba(255, 255, 255, 0.68);
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  --r2: 28px;
 }
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
+html,
+body {
+  min-height: 100%;
 }
 
 body {
-  margin: 0;
-  color: var(--ink);
-  font-family: "Space Grotesk", "Segoe UI", sans-serif;
+  color: var(--text);
+  font-family: "Space Grotesk", "Segoe UI", Arial, sans-serif;
   background:
-    radial-gradient(85% 70% at 75% 8%, rgba(102, 166, 255, 0.26), transparent 65%),
-    radial-gradient(80% 55% at 14% 12%, rgba(99, 141, 255, 0.2), transparent 70%),
-    linear-gradient(180deg, var(--bg-3) 0%, var(--bg-2) 48%, var(--bg-1) 100%);
-  min-height: 100vh;
+    radial-gradient(900px 500px at 15% 20%, rgba(90, 166, 255, 0.18), transparent 60%),
+    radial-gradient(900px 500px at 85% 35%, rgba(137, 89, 255, 0.18), transparent 60%),
+    linear-gradient(180deg, var(--bg0), var(--bg1));
   overflow-x: hidden;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 3px 3px;
-  opacity: 0.2;
+a {
+  color: inherit;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 18px;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(16px);
+  background: rgba(5, 7, 15, 0.55);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nav {
+  height: 72px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand {
+  justify-self: center;
+  font-family: "Cinzel", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  font-size: 20px;
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(90, 166, 255, 0.15), rgba(137, 89, 255, 0.15));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.brand:hover {
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
 .hero {
-  position: relative;
-  min-height: 100svh;
+  padding: 46px 0 24px;
+}
+
+.door-scene {
   display: flex;
   flex-direction: column;
-  gap: clamp(1rem, 2.5vw, 1.8rem);
   align-items: center;
-  justify-content: center;
-  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 3rem) clamp(2rem, 7vh, 4rem);
-}
-
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: auto 0 0 0;
-  height: min(24vw, 210px);
-  background: radial-gradient(65% 90% at 50% 50%, rgba(93, 153, 255, 0.34), transparent 72%);
-  filter: blur(10px);
-  pointer-events: none;
-}
-
-.hero-title {
-  margin: 0 0 0.2rem;
-  font-family: "Cinzel", Georgia, serif;
-  font-size: clamp(2.1rem, 5.5vw, 4rem);
-  line-height: 1.05;
+  padding: 10px 0 36px;
   text-align: center;
-  text-wrap: balance;
-  animation: rise 900ms ease both;
+}
+
+.door-heading {
+  font-family: "Cinzel", Georgia, serif;
+  font-size: clamp(26px, 5vw, 46px);
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  background: linear-gradient(135deg, #fff 30%, rgba(90, 166, 255, 0.9) 60%, rgba(137, 89, 255, 0.85));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.door-tagline {
+  font-size: clamp(14px, 2.2vw, 19px);
+  color: var(--muted);
+  font-weight: 700;
+  margin-top: 6px;
+  margin-bottom: 30px;
 }
 
 .door-link {
   text-decoration: none;
-  color: inherit;
   display: block;
-  perspective: 1400px;
-  transform-style: preserve-3d;
 }
 
-.door-card {
+.door-photo-link {
   position: relative;
-  margin: 0;
-  width: min(84vw, 510px);
-  border-radius: 2rem;
+  display: inline-block;
+  border-radius: 20px;
   overflow: hidden;
-  border: 1px solid var(--line);
-  box-shadow:
-    0 35px 50px rgba(1, 5, 14, 0.62),
-    0 0 0 1px rgba(210, 232, 255, 0.08) inset;
-  transform-origin: left center;
-  transition: transform 650ms cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 650ms ease;
-  animation: rise 1200ms 120ms ease both;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.door-card img {
+.door-photo-link:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.62), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+.door-photo {
   display: block;
-  width: 100%;
-  height: auto;
+  width: min(420px, 85vw);
+  height: min(560px, 70vh);
   object-fit: cover;
-  transform: scale(1.02);
-  filter: saturate(1.08) contrast(1.06);
-  transition: transform 700ms ease, filter 700ms ease;
+  object-position: center;
 }
 
-.door-card::before {
-  content: "";
+.door-photo-badge {
   position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(95% 110% at 4% 50%, rgba(2, 7, 18, 0.7), transparent 68%),
-    linear-gradient(180deg, rgba(3, 10, 26, 0.02) 0%, rgba(3, 10, 26, 0.25) 100%);
-  pointer-events: none;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.74));
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.65);
 }
 
-.door-glow {
-  position: absolute;
-  inset: -14%;
-  border-radius: inherit;
-  background: radial-gradient(50% 48% at 52% 52%, var(--glow), transparent 68%);
-  opacity: 0.65;
-  filter: blur(18px);
-  pointer-events: none;
-}
-
-.door-link:hover .door-card,
-.door-link:focus-visible .door-card {
-  transform: rotateY(-12deg) translateX(-0.6rem);
-  box-shadow:
-    0 46px 58px rgba(1, 6, 18, 0.72),
-    0 0 0 1px rgba(210, 232, 255, 0.18) inset;
-}
-
-.door-link:hover img,
-.door-link:focus-visible img {
-  transform: scale(1.04);
-  filter: saturate(1.16) contrast(1.12);
-}
-
-body.door-open .door-card {
-  transform: rotateY(-22deg) translateX(-1rem);
-}
-
-main {
-  padding: 0 1rem clamp(2rem, 7vh, 5rem);
-}
-
-.panel {
-  width: min(1080px, 100%);
-  margin: 0 auto;
-  padding: clamp(1.2rem, 3.5vw, 2.4rem);
-  border-radius: 1.5rem;
-  border: 1px solid var(--line);
-  background: linear-gradient(155deg, rgba(10, 23, 47, 0.9), var(--surface));
-  backdrop-filter: blur(3px);
-}
-
-h1,
-h2 {
-  margin: 0 0 0.7rem;
-  font-family: "Cinzel", Georgia, serif;
-  font-size: clamp(1.5rem, 4.5vw, 2.4rem);
-}
-
-.panel > p {
-  margin: 0;
-  max-width: 58ch;
-  color: var(--ink-soft);
-  line-height: 1.65;
-}
-
-.panel > p + p {
-  margin-top: 0.95rem;
-}
-
-.about-panel {
-  max-width: 860px;
-}
-
-.more-link-wrap {
-  margin-top: 1.4rem;
-}
-
-.secondary-link {
-  color: #f6d9b2;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(246, 217, 178, 0.5);
-  padding-bottom: 0.2rem;
-}
-
-.secondary-link:hover,
-.secondary-link:focus-visible {
-  border-bottom-color: #f6d9b2;
-}
-
-.inner-page {
-  min-height: 100svh;
-}
-
-.inner-header {
-  padding: 1.4rem 1rem 0.4rem;
+.row {
   display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.center-row {
+  margin-top: 24px;
   justify-content: center;
 }
 
-.atlas-home-button {
+.primary-btn,
+.secondary-btn,
+.ghost-btn,
+button.primary-btn,
+button.secondary-btn,
+button.ghost-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 160px;
-  padding: 0.6rem 1.25rem;
-  border-radius: 999px;
-  border: 1px solid rgba(176, 207, 255, 0.5);
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-weight: 900;
   text-decoration: none;
-  color: var(--ink);
-  font-family: "Cinzel", Georgia, serif;
-  letter-spacing: 0.08em;
-  background: rgba(7, 21, 48, 0.86);
-  box-shadow: 0 8px 24px rgba(1, 5, 16, 0.4);
+  cursor: pointer;
+  color: var(--text);
+  font-size: 14px;
 }
 
-.atlas-home-button:hover,
-.atlas-home-button:focus-visible {
-  border-color: rgba(214, 234, 255, 0.85);
-  background: rgba(11, 31, 69, 0.9);
+.primary-btn {
+  background: linear-gradient(90deg, rgba(90, 166, 255, 0.95), rgba(137, 89, 255, 0.95));
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
-.inner-main {
-  padding: 1rem 1rem clamp(2rem, 7vh, 5rem);
+.secondary-btn {
+  background: rgba(255, 255, 255, 0.1);
 }
 
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
 }
 
-@media (max-width: 900px) {
-  .hero {
-    min-height: min(92svh, 820px);
-    gap: 1.2rem;
-  }
-
-  .door-card {
-    width: min(88vw, 500px);
-  }
+.ghost-btn {
+  background: transparent;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
+.ghost-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.public {
+  padding: 26px 0 70px;
+}
+
+.public-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 18px;
+}
+
+.public-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 6px 0 14px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--r2);
+  box-shadow: var(--shadow);
+  padding: 18px;
+}
+
+.field label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0 0 6px;
+  font-weight: 700;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 12px;
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  outline: none;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.notice {
+  border-left: 3px solid rgba(90, 166, 255, 0.9);
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(90, 166, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.err {
+  border-left-color: rgba(255, 80, 120, 0.9);
+  background: rgba(255, 80, 120, 0.08);
+}
+
+@media (max-width: 600px) {
+  .door-photo {
+    width: 88vw;
+    height: 62vh;
   }
 }
