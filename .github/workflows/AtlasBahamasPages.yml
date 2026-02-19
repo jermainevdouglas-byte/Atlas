@@ -5,8 +5,7 @@ on:
     branches:
       - main
     paths:
-      - index.html
-      - AtlasBahamasHome.html
+      - "*.html"
       - AtlasBahamasVisualIdentity.css
       - AtlasBahamasDoorFlow.js
       - assets/**
