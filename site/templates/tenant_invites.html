@@ -1,0 +1,18 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Property Invites</h2><p class="muted">Accept or decline property confirmation requests from your landlord or manager.</p><div style="margin-top:10px;"><a class="ghost-btn" href="/tenant">Back to Dashboard</a></div></div></div>
+{{message_box}}
+<div class="card">
+  <h3 style="margin-top:0;">Pending Invites</h3>
+  {{pending_cards}}
+</div>
+<div class="card" style="margin-top:12px;">
+  <h3 style="margin-top:0;">Current Linked Property</h3>
+  {{active_box}}
+</div>
+<div class="card" style="margin-top:12px;">
+  <h3 style="margin-top:0;">Invite History</h3>
+  <table class="table"><thead><tr><th>ID</th><th>Property</th><th>Unit</th><th>From</th><th>Status</th><th>Sent</th><th>Responded</th></tr></thead><tbody>{{history_rows}}</tbody></table>
+  {{history_empty}}
+</div>
+</div></section>
+

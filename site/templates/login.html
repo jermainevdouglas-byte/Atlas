@@ -1,0 +1,12 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Log in</h2><p class="muted">Your role controls access.</p></div></div>
+<div class="card" style="max-width:520px;">
+{{error_box}}
+<form method="POST" action="/login" style="margin-top:12px;">
+<div class="field"><label>Username</label><input name="username" required autocomplete="username"></div>
+<div class="field" style="margin-top:10px;"><label>Password</label><input type="password" name="password" required autocomplete="current-password"></div>
+<button class="primary-btn" style="margin-top:12px;width:100%;">Log in</button>
+</form>
+<p class="muted" style="margin:12px 0 0;">No account? <a href="/register">Register</a></p>
+</div></div></section>
+

@@ -1,0 +1,14 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Pay Rent</h2><p class="muted">Submit your rent payment.</p></div></div>
+<div class="card" style="max-width:760px;">
+{{message_box}}
+{{lease_box}}
+{{saved_method_box}}
+<form method="POST" action="/tenant/pay-rent" style="margin-top:12px;">
+<div class="field"><label>Amount</label><input type="number" name="amount" min="1" required placeholder="1800" value="{{default_amount}}"></div>
+<div class="field" style="margin-top:10px;"><label>Payment Method</label><select name="payment_method_id">{{payment_method_options}}</select></div>
+<button class="primary-btn" style="margin-top:12px;">Submit Payment</button>
+</form>
+<div class="row" style="margin-top:10px;"><a class="ghost-btn" href="/tenant/payment-methods">Manage Payment Methods</a><a class="ghost-btn" href="/tenant/autopay">Autopay Settings</a></div>
+</div></div></section>
+

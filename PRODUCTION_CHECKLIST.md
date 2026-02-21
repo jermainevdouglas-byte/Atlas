@@ -1,10 +1,10 @@
 # Production Readiness Checklist
 
-This checklist upgrades Atlas for production while preserving current behavior.
+This checklist upgrades AtlasBahamas for production while preserving current behavior.
 
 ## Current State
 
-- App runtime: modular Python HTTP server (`atlas_app/core.py`, `atlas_app/http_handler.py`)
+- App runtime: modular Python HTTP server (`atlasbahamas_app/core.py`, `atlasbahamas_app/http_handler.py`)
 - Database: SQLite (active)
 - Sessions/rate limits: Redis-backed when configured, with SQLite/in-process fallback
 - Deployment: local runtime
@@ -22,7 +22,7 @@ This checklist upgrades Atlas for production while preserving current behavior.
 
 - [x] Add production scaffolding files (`docker-compose.yml`, `Dockerfile`, `.env.example`, `nginx.conf`, `deploy.sh`)
 - [x] Add migration helper modules (`db.py`, `redis_client.py`)
-- [x] Keep BaseHTTPRequestHandler as active runtime; retain Flask as non-production scaffold (`app.py`) and WSGI adapter path (`wsgi.py`, `atlas_app/wsgi_adapter.py`)
+- [x] Keep BaseHTTPRequestHandler as active runtime; retain Flask as non-production scaffold (`app.py`) and WSGI adapter path (`wsgi.py`, `atlasbahamas_app/wsgi_adapter.py`)
 - [x] Add secure production env templates (`.env.example`, `.env.production.template`)
 - [x] Add backup + restore verification tooling (`tools/backup_restore.py`, `tools/backup_cron.example`)
 - [x] Add release gate tooling (`tools/release_gate.py`)
@@ -55,4 +55,5 @@ This checklist upgrades Atlas for production while preserving current behavior.
 
 - The current app remains fully operational on SQLite while you migrate incrementally.
 - PostgreSQL schema bootstrap remains backward-compatible via `SCHEMA`; versioned SQL migrations are now applied from `migrations/postgres`.
+
 

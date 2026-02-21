@@ -1,0 +1,21 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Notification Preferences</h2><p class="muted">Choose which alerts you want and how they should be delivered.</p><div style="margin-top:10px;"><a class="ghost-btn" href="/notifications">Back to Alerts</a></div></div></div>
+{{message_box}}
+<div class="card" style="max-width:920px;">
+  <form method="POST" action="/notifications/preferences">
+    <h3 style="margin-top:0;">Alert Types</h3>
+    <label style="display:flex;gap:8px;align-items:center;margin:6px 0;"><input type="checkbox" name="payment_events" value="1" {{payment_events_checked}}> Payment reminders and payment status updates</label>
+    <label style="display:flex;gap:8px;align-items:center;margin:6px 0;"><input type="checkbox" name="maintenance_events" value="1" {{maintenance_events_checked}}> Maintenance request and assignment updates</label>
+    <label style="display:flex;gap:8px;align-items:center;margin:6px 0;"><input type="checkbox" name="lease_events" value="1" {{lease_events_checked}}> Lease changes, signatures, and expiration events</label>
+    <label style="display:flex;gap:8px;align-items:center;margin:6px 0;"><input type="checkbox" name="invite_events" value="1" {{invite_events_checked}}> Invite and tenant-sync alerts</label>
+    <label style="display:flex;gap:8px;align-items:center;margin:6px 0;"><input type="checkbox" name="application_events" value="1" {{application_events_checked}}> Application review updates</label>
+    <label style="display:flex;gap:8px;align-items:center;margin:6px 0;"><input type="checkbox" name="inquiry_events" value="1" {{inquiry_events_checked}}> Listing inquiry updates</label>
+    <label style="display:flex;gap:8px;align-items:center;margin:6px 0;"><input type="checkbox" name="system_events" value="1" {{system_events_checked}}> System/profile/security notices</label>
+    <h3 style="margin-top:14px;">Delivery</h3>
+    <label style="display:flex;gap:8px;align-items:center;margin:6px 0;"><input type="checkbox" name="email_enabled" value="1" {{email_enabled_checked}}> Email notifications (when SMTP is configured)</label>
+    <label style="display:flex;gap:8px;align-items:center;margin:6px 0;"><input type="checkbox" name="sms_enabled" value="1" {{sms_enabled_checked}}> SMS notifications (placeholder)</label>
+    <button class="primary-btn" style="margin-top:12px;">Save Preferences</button>
+  </form>
+</div>
+</div></section>
+

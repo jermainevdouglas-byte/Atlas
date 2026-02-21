@@ -1,0 +1,7 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Listing Submissions</h2><p class="muted">Track listing requests you submitted for approval.</p><div style="margin-top:10px;"><a class="ghost-btn" href="/manager">Back to Dashboard</a></div></div></div>
+<div class="row" style="margin-bottom:10px;"><a class="ghost-btn" href="{{export_filtered_url}}">Export Filtered CSV</a></div>
+{{message_box}}
+{{filters_form}}
+<div class="card"><table class="table"><thead><tr><th>ID</th><th>Property</th><th>Unit</th><th>Title</th><th>Price</th><th>Status</th><th>Review Note</th><th>Submitted</th></tr></thead><tbody>{{requests_rows}}</tbody></table>{{empty_box}}{{pager_box}}</div></div></section>
+

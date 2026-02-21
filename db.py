@@ -1,4 +1,4 @@
-"""Database compatibility layer for Atlas (SQLite default, optional PostgreSQL)."""
+"""Database compatibility layer for AtlasBahamas (SQLite default, optional PostgreSQL)."""
 from __future__ import annotations
 
 import os
@@ -347,31 +347,13 @@ def postgres_enabled(dsn: str | None = None) -> bool:
     return bool(use_dsn)
 
 
-def _env_bool(name: str, default: bool = False) -> bool:
-    raw = os.getenv(name)
-    if raw is None:
-        return bool(default)
-    return str(raw).strip().lower() in ("1", "true", "yes", "on")
-
-
 def connect_db(path: str | None = None):
     dsn = (os.getenv("POSTGRES_DSN", "") or "").strip()
-    strict_postgres = _env_bool("POSTGRES_REQUIRED", False)
     if dsn:
         if psycopg is None:
-            if strict_postgres:
-                raise RuntimeError("POSTGRES_DSN is set but psycopg is not installed")
-            # Graceful local fallback when optional PostgreSQL deps are unavailable.
-            os.environ["POSTGRES_DSN"] = ""
-        else:
-            try:
-                return PostgresConnectionCompat(dsn)
-            except Exception:
-                if strict_postgres:
-                    raise
-                # Graceful local fallback when PostgreSQL is configured but unreachable.
-                os.environ["POSTGRES_DSN"] = ""
-    sqlite_path = path or os.getenv("DATABASE_PATH", "data/atlas.sqlite")
+            raise RuntimeError("POSTGRES_DSN is set but psycopg is not installed")
+        return PostgresConnectionCompat(dsn)
+    sqlite_path = path or os.getenv("DATABASE_PATH", "data/atlasbahamas.sqlite")
     return SqliteConnectionCompat(sqlite_path, timeout=30)
 
 
@@ -400,7 +382,7 @@ class PostgresDB:
 
 class SqliteDB:
     def __init__(self, path: str | None = None):
-        self.path = path or os.getenv("DATABASE_PATH", "data/atlas.sqlite")
+        self.path = path or os.getenv("DATABASE_PATH", "data/atlasbahamas.sqlite")
 
     @contextmanager
     def connect(self):
@@ -420,4 +402,5 @@ def get_db_backend():
     if pg.enabled:
         return pg
     return SqliteDB()
+
 

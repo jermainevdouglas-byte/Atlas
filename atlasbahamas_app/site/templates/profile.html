@@ -1,0 +1,21 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Profile</h2><p class="muted">Manage your account details and password.</p></div></div>
+<div class="card" style="max-width:760px;">
+{{message_box}}
+<form method="POST" action="/profile/update" style="margin-top:12px;">
+  <div class="row">
+    <div class="field" style="flex:1;"><label>Full name</label><input name="full_name" value="{{full_name}}" required></div>
+    <div class="field" style="flex:1;"><label>Phone</label><input name="phone" value="{{phone}}" required></div>
+  </div>
+  <div class="field" style="margin-top:10px;"><label>Email</label><input type="email" name="email" value="{{email}}" required></div>
+
+  <div class="notice" style="margin-top:12px;"><b>Password change (optional)</b><br><span class="muted">Leave blank to keep existing password.</span></div>
+  <div class="field" style="margin-top:10px;"><label>Current password</label><input type="password" name="current_password" autocomplete="current-password"></div>
+  <div class="row" style="margin-top:10px;">
+    <div class="field" style="flex:1;"><label>New password</label><input type="password" name="new_password" autocomplete="new-password"></div>
+    <div class="field" style="flex:1;"><label>Confirm new password</label><input type="password" name="new_password2" autocomplete="new-password"></div>
+  </div>
+  <button class="primary-btn" style="margin-top:12px;">Save changes</button>
+</form>
+</div></div></section>
+

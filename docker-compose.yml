@@ -1,9 +1,47 @@
 services:
-  atlas_app:
+  postgres:
+    image: postgres:16-alpine
+    container_name: atlasbahamas_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-atlasbahamas}
+      POSTGRES_USER: ${POSTGRES_USER:-atlasbahamas}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-atlasbahamaslocalpg}
+      TZ: ${TZ:-UTC}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"${POSTGRES_USER:-atlasbahamas}\" -d \"${POSTGRES_DB:-atlasbahamas}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - atlasbahamas_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: atlasbahamas_redis
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:-atlasbahamaslocalredis}"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"${REDIS_PASSWORD:-atlasbahamaslocalredis}\" ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - atlasbahamas_network
+
+  atlasbahamas_app:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: atlasbahamas_app
     environment:
+      ATLASBAHAMAS_RUNTIME: legacy
       HOST: 0.0.0.0
       PORT: 5000
       PROD_MODE: ${PROD_MODE:-0}
@@ -16,14 +54,25 @@ services:
       MAX_LOGIN_ATTEMPTS: ${MAX_LOGIN_ATTEMPTS:-5}
       LOGIN_ATTEMPT_TIMEOUT_MINUTES: ${LOGIN_ATTEMPT_TIMEOUT_MINUTES:-15}
       PASSWORD_HASH_ROUNDS: ${PASSWORD_HASH_ROUNDS:-240000}
-      ATLASBAHAMAS_DB_PATH: /app/data/atlasbahamas.sqlite
-      SEED_DEMO_USERS: ${SEED_DEMO_USERS:-1}
-      REDIS_URL: redis://:${REDIS_PASSWORD:-atlaslocalredis}@redis:6379/0
+      DATABASE_PATH: /app/data/atlasbahamas.sqlite
+      POSTGRES_DSN: ${POSTGRES_DSN:-postgresql://atlasbahamas:${POSTGRES_PASSWORD:-atlasbahamaslocalpg}@postgres:5432/${POSTGRES_DB:-atlasbahamas}}
+      POSTGRES_REQUIRED: ${POSTGRES_REQUIRED:-0}
+      CLEAR_SESSIONS_ON_START: ${CLEAR_SESSIONS_ON_START:-0}
+      SEED_DEMO_DATA: ${SEED_DEMO_DATA:-0}
+      REDIS_URL: ${REDIS_URL:-redis://:${REDIS_PASSWORD:-atlasbahamaslocalredis}@redis:6379/0}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1}
+      CSRF_TRUSTED_HOSTS: ${CSRF_TRUSTED_HOSTS:-localhost,127.0.0.1}
+      LOG_DIR: /app/data/logs
+      STORAGE_ROOT: /app/storage
+      UPLOAD_DIR: /app/storage
     volumes:
       - ./data:/app/data
+      - ./storage:/app/storage
     ports:
-      - "5000:5000"
+      - "${APP_PORT:-5000}:5000"
     depends_on:
+      postgres:
+        condition: service_healthy
       redis:
         condition: service_healthy
     healthcheck:
@@ -33,18 +82,34 @@ services:
       retries: 3
       start_period: 20s
     restart: unless-stopped
+    networks:
+      - atlasbahamas_network
 
-  redis:
-    image: redis:7-alpine
-    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:-atlaslocalredis}"]
+  atlasbahamas_web:
+    image: nginx:1.27-alpine
+    container_name: atlasbahamas_web
+    depends_on:
+      atlasbahamas_app:
+        condition: service_healthy
+    ports:
+      - "${WEB_PORT:-80}:80"
     volumes:
-      - redis_data:/data
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     healthcheck:
-      test: ["CMD-SHELL", "redis-cli -a \"${REDIS_PASSWORD:-atlaslocalredis}\" ping | grep PONG"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     restart: unless-stopped
+    networks:
+      - atlasbahamas_network
+    profiles:
+      - edge
 
 volumes:
+  postgres_data:
   redis_data:
+
+networks:
+  atlasbahamas_network:
+    driver: bridge

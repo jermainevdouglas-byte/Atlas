@@ -1,4 +1,4 @@
--- Atlas PostgreSQL migration 017
+-- AtlasBahamas PostgreSQL migration 017
 -- Adds missing operational indexes and schema version tracking metadata.
 
 BEGIN;
@@ -19,6 +19,9 @@ CREATE INDEX IF NOT EXISTS idx_leases_property_active ON tenant_leases(property_
 CREATE INDEX IF NOT EXISTS idx_maintenance_status_created ON maintenance_requests(status, created_at, id);
 CREATE INDEX IF NOT EXISTS idx_password_resets_user_expires ON password_resets(user_id, expires_at, used);
 CREATE INDEX IF NOT EXISTS idx_listing_requests_prop_status ON listing_requests(property_id, status, id);
+
+ALTER TABLE tenant_property_invites ADD COLUMN IF NOT EXISTS expires_at TEXT;
+ALTER TABLE tenant_property_invites ADD COLUMN IF NOT EXISTS revoke_reason TEXT;
 CREATE INDEX IF NOT EXISTS idx_tp_invites_pending_expiry ON tenant_property_invites(status, expires_at, created_at);
 
 INSERT INTO schema_meta(key, value, updated_at)
@@ -28,4 +31,5 @@ ON CONFLICT(key) DO UPDATE SET
     updated_at = EXCLUDED.updated_at;
 
 COMMIT;
+
 

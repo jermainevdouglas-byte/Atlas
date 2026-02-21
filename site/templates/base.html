@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preload" as="image" href="/static/img/door_hero.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/css/styles.css"><title>{{title}}</title></head>
+<body>
+<header class="header"><div class="container">
+<nav class="nav">
+  <div class="nav-left desktop-only">
+    <a class="pill" data-nav="/about" href="/about">About Us</a>
+    <a class="pill" data-nav="/contact" href="/contact">Contact Us</a>
+    <a class="pill" data-nav="/listings" href="/listings">Listings</a>
+  </div>
+
+  <a class="brand" href="/">AtlasBahamas</a>
+
+  <div class="nav-right">
+    <div class="nav-actions desktop-only">{{nav_right}}</div>
+
+    <div class="menu-wrap">
+      <button class="hamburger" id="hamburgerBtn" type="button" aria-label="Menu" aria-expanded="false">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+      <div class="menu-panel" id="hamburgerPanel" role="menu" aria-label="Site menu">
+        <a class="menu-item" href="/about">About Us</a>
+        <a class="menu-item" href="/contact">Contact Us</a>
+        <a class="menu-item" href="/listings">Listings</a>
+        <div class="menu-sep"></div>
+        {{nav_menu}}
+      </div>
+    </div>
+  </div>
+</nav></div></header>
+{{content}}
+{{scripts}}
+<script>
+(function(){
+  function getCookie(name){
+    var m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[.$?*|{}()\[\]\\\/\+^]/g, '\\$&') + '=([^;]*)'));
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+
+  // Set active state on top links.
+  var p = location.pathname || '/';
+  document.querySelectorAll('.nav-left [data-nav]').forEach(function(a){
+    var target = a.getAttribute('data-nav') || '';
+    var active = (p === target) || (target === '/listings' && p.indexOf('/listing/') === 0);
+    if(active) a.classList.add('is-active');
+  });
+
+  // Inject a consistent in-page Back to Dashboard button on role tool pages.
+  (function injectBackToDashboard(){
+    var marker = document.getElementById('atlasRoleMarker');
+    if(!marker) return;
+    var home = marker.getAttribute('data-home') || '';
+    var path = location.pathname || '/';
+    if(!home || path === home) return;
+    if(!/^\/(tenant|landlord|manager|property-manager|admin)(\/|$)/.test(path)) return;
+    if(document.getElementById('atlasBackToDash')) return;
+    var exists = Array.prototype.some.call(document.querySelectorAll('a[href]'), function(a){
+      return (a.getAttribute('href') || '') === home && /back\s+to\s+dashboard/i.test(a.textContent || '');
+    });
+    if(exists) return;
+    var row = document.createElement('div');
+    row.className = 'row';
+    row.style.margin = '0 0 12px 0';
+    row.innerHTML = '<a id="atlasBackToDash" class="ghost-btn" href="' + home + '">Back to Dashboard</a>';
+    var hdr = document.querySelector('.public-header') || document.querySelector('.dash-top');
+    if(hdr){
+      hdr.insertAdjacentElement('afterend', row);
+      return;
+    }
+    var host = document.querySelector('.public-inner') || document.querySelector('.container') || document.body;
+    if(host.firstChild) host.insertBefore(row, host.firstChild);
+    else host.appendChild(row);
+  })();
+
+  // CSRF hidden field injection for all POST forms (double-submit cookie pattern).
+  var csrf = getCookie('ATLASBAHAMAS_CSRF');
+  if(csrf){
+    document.querySelectorAll('form[method="POST"], form[method="post"]').forEach(function(form){
+      if(form.querySelector('input[name="csrf_token"]')) return;
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'csrf_token';
+      input.value = csrf;
+      form.appendChild(input);
+    });
+  }
+
+  const btn=document.getElementById('hamburgerBtn');
+  const panel=document.getElementById('hamburgerPanel');
+  if(btn&&panel){
+    function close(){ panel.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      const open=panel.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', function(){ close(); });
+    panel.addEventListener('click', function(e){ e.stopPropagation(); });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
+  }
+  // Profile dropdown (desktop)
+  const pbtn=document.querySelector('.profile-btn');
+  const ppanel=document.querySelector('.profile-panel');
+  if(pbtn&&ppanel){
+    function pclose(){ ppanel.classList.remove('open'); pbtn.setAttribute('aria-expanded','false'); }
+    pbtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      const open=ppanel.classList.toggle('open');
+      pbtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', function(){ pclose(); });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') pclose(); });
+    ppanel.addEventListener('click', function(e){ e.stopPropagation(); });
+  }
+  // Legacy dropdown compatibility (older nav markup)
+  const lbtn=document.querySelector('.dd-trigger');
+  const lpanel=document.querySelector('.dd-menu');
+  if(lbtn&&lpanel){
+    function lclose(){ lpanel.classList.remove('open'); lbtn.setAttribute('aria-expanded','false'); }
+    lbtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      const open=lpanel.classList.toggle('open');
+      lbtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', function(){ lclose(); });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') lclose(); });
+    lpanel.addEventListener('click', function(e){ e.stopPropagation(); });
+  }
+
+  // Collapsible manager dashboard sections.
+  document.addEventListener('click', function(e){
+    var head = e.target && e.target.closest ? e.target.closest('[data-toggle="ops-nav"]') : null;
+    if(!head) return;
+    var section = head.closest('.ops-nav-section');
+    if(!section) return;
+    section.classList.toggle('open');
+    var caret = head.querySelector('.ops-nav-caret');
+    if(caret){
+      caret.textContent = section.classList.contains('open') ? '▾' : '▸';
+    }
+  });
+
+  // Form submit loading states to prevent accidental duplicate actions.
+  document.querySelectorAll('form').forEach(function(form){
+    form.addEventListener('submit', function(){
+      var buttons = form.querySelectorAll('button[type="submit"]');
+      if(!buttons || !buttons.length) return;
+      buttons.forEach(function(btn){
+        if(btn.disabled) return;
+        var original = btn.getAttribute('data-original-label') || btn.innerHTML;
+        btn.setAttribute('data-original-label', original);
+        btn.disabled = true;
+        btn.style.opacity = '0.72';
+        btn.innerHTML = 'Processing...';
+      });
+      setTimeout(function(){
+        buttons.forEach(function(btn){
+          var original = btn.getAttribute('data-original-label');
+          if(original){
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.innerHTML = original;
+          }
+        });
+      }, 12000);
+    });
+  });
+
+  // Share buttons (works for dynamically added elements too)
+  function _atlasShare(url, title){
+    try{
+      if(navigator.share){
+        navigator.share({title: title || document.title, url: url}).catch(function(){});
+        return;
+      }
+    }catch(e){}
+    // Fallback: try clipboard, else prompt
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){
+        alert("Link copied to clipboard");
+      }).catch(function(){
+        prompt("Copy this link:", url);
+      });
+    }else{
+      prompt("Copy this link:", url);
+    }
+  }
+  window.atlasShare = _atlasShare;
+  document.addEventListener('click', function(e){
+    var el = e.target && e.target.closest ? e.target.closest('[data-share-url]') : null;
+    if(!el) return;
+    e.preventDefault();
+    e.stopPropagation();
+    _atlasShare(el.getAttribute('data-share-url'), el.getAttribute('data-share-title') || '');
+  });
+
+})();
+</script>
+</body></html>
+

@@ -1,0 +1,55 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div>
+<h2>{{listing_title}}</h2>
+<p class="muted">${{listing_price}} &bull; {{listing_location}} &bull; {{listing_beds}} bed / {{listing_baths}} bath &bull; {{listing_category}}</p>
+</div><a class="ghost-btn" href="/listings">Back</a></div>
+
+<div class="card">
+{{gallery_html}}
+<p class="muted" style="margin-top:12px;line-height:1.6">{{listing_description}}</p>
+
+<div class="row" style="margin-top:14px;gap:10px;flex-wrap:wrap;">
+  {{favorite_button}}
+  <button class="secondary-btn" type="button" data-share-url="{{share_url}}" data-share-title="{{listing_title}}">Share</button>
+  <a class="btn ghost" href="/listings">Browse more</a>
+</div>
+</div>
+
+<div class="grid2" style="margin-top:18px;">
+  <div class="card">
+    <h3 style="margin:0 0 10px 0;">Apply for this listing</h3>
+    <form method="POST" action="/apply" id="applyForm">
+      <input type="hidden" name="listing_id" value="{{listing_id}}" form="applyForm">
+      <div class="grid2">
+        <div><label>Full name</label><input name="full_name" value="{{prefill_name}}" required form="applyForm"></div>
+        <div><label>Email</label><input name="email" value="{{prefill_email}}" required form="applyForm"></div>
+        <div><label>Phone</label><input name="phone" value="{{prefill_phone}}" form="applyForm"></div>
+        <div><label>Monthly income</label><input name="income" placeholder="$" form="applyForm"></div>
+      </div>
+      <label style="margin-top:10px;">Notes</label>
+      <textarea name="notes" rows="4" placeholder="Any helpful details..." form="applyForm"></textarea>
+      <button class="primary-btn" type="submit" style="margin-top:10px;" form="applyForm">Submit application</button>
+      <div class="muted" style="margin-top:8px;">Application is reviewed separately from inquiry messages.</div>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3 style="margin:0 0 10px 0;">Have a question?</h3>
+    <form method="POST" action="/inquiry" id="inquiryForm">
+      <input type="hidden" name="listing_id" value="{{listing_id}}" form="inquiryForm">
+      <div class="grid2">
+        <div><label>Full name</label><input name="full_name" value="{{prefill_name}}" required form="inquiryForm"></div>
+        <div><label>Email</label><input name="email" value="{{prefill_email}}" required form="inquiryForm"></div>
+        <div><label>Phone</label><input name="phone" value="{{prefill_phone}}" form="inquiryForm"></div>
+        <div><label>Subject</label><input name="subject" placeholder="Viewing / availability / price..." form="inquiryForm"></div>
+      </div>
+      <label style="margin-top:10px;">Message</label>
+      <textarea name="body" rows="4" placeholder="Type your message..." required form="inquiryForm"></textarea>
+      <button class="secondary-btn" type="submit" style="margin-top:10px;" form="inquiryForm">Send inquiry</button>
+      <div class="muted" style="margin-top:8px;">Inquiry is sent instantly and does not submit an application.</div>
+    </form>
+  </div>
+</div>
+
+</div></section>
+

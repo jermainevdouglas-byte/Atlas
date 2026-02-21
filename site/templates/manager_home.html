@@ -1,0 +1,13 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Manager Dashboard</h2><p class="muted">Organized operations view for portfolio, tenant, and workflow actions.</p></div></div>
+<div class="card" style="margin-bottom:12px;"><div class="row"><a class="primary-btn" href="/manager/queue">Open Task Queue</a><a class="secondary-btn" href="/manager/rent-roll">Rent Roll</a><a class="secondary-btn" href="/manager/analytics">Analytics</a><a class="ghost-btn" href="/manager/calendar">Calendar View</a></div></div>
+<div style="display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">
+  <div class="card"><h3 style="margin-top:0;">Operations</h3><div class="row"><a class="secondary-btn" href="/manager/maintenance">Maintenance</a><a class="secondary-btn" href="/manager/payments">Payments</a><a class="secondary-btn" href="/manager/checks">Property Checks</a><a class="secondary-btn" href="/manager/inspections">Inspections</a><a class="secondary-btn" href="/manager/preventive">Preventive</a></div></div>
+  <div class="card"><h3 style="margin-top:0;">Properties & Leases</h3><div class="row"><a class="secondary-btn" href="/manager/properties">Properties</a><a class="secondary-btn" href="/manager/property/new">Register Property</a><a class="secondary-btn" href="/manager/leases">Leases</a><a class="secondary-btn" href="/manager/tenants">Tenant Sync</a></div></div>
+  <div class="card"><h3 style="margin-top:0;">Listings & People</h3><div class="row"><a class="secondary-btn" href="/manager/listing-requests">Listing Submissions</a><a class="secondary-btn" href="/manager/inquiries">Inquiries</a><a class="secondary-btn" href="/manager/applications">Applications</a><a class="secondary-btn" href="/manager/batch-notify">Mass Notifications</a></div></div>
+</div>
+{{manager_nav_sections}}
+{{today_queue}}
+{{activity_feed}}
+</div></section>
+

@@ -1,98 +1,32 @@
-# Docker build context - exclude unnecessary files
-
-# Git and version control
+﻿# Git
 .git
-.gitignore
-.gitattributes
 .github
 
-# Documentation (not needed in container)
-*.md
-README*
-QUICKSTART*
-RUNBOOK*
-VALIDATION*
-TROUBLESHOOTING*
-DEPLOYMENT*
-INDEX*
-ENV_SETUP*
-ARCHITECTURE*
-PRODUCTION_CHECKLIST*
-PHASED_IMPLEMENTATION*
-
-# Python
-__pycache__
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-venv/
-ENV/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-pip-log.txt
-pip-delete-this-directory.txt
-
-# IDE and editors
-.vscode
-.idea
-*.swp
-*.swo
-*~
-.DS_Store
-*.sublime-*
-.vim
-
-# Node (if any)
-node_modules/
-npm-debug.log
-yarn-error.log
-
-# Environment
+# Local env and secrets
 .env
 .env.local
 .env.*.local
+AtlasBahamas.env
 
-# Test and coverage
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-.hypothesis/
+# Python cache/build
+__pycache__
+*.py[cod]
+*$py.class
+.pytest_cache
 
-# Temporary files
-.tmp*
-*.log
-*.tmp
-temp/
-tmp/
-
-# OS files
+# VCS/editor noise
+.vscode
+.idea
+.DS_Store
 Thumbs.db
-Desktop.ini
-.AppleDouble
-.LSOverride
 
-# Docker
-.dockerignore
-Dockerfile.*.bak
-
-# Project-specific (adjust as needed)
-data/logs/*.log
+# Runtime artifacts
+data/logs/
 data/*.sqlite
 data/*.sqlite-journal
-*.backup
+storage/
+*.log
+
+# Docs and reports
+*.zip
+AUDIT_REPORT_*.txt

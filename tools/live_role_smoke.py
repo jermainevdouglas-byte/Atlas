@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Live HTTPS smoke checks against the running Atlas stack."""
+"""Live HTTPS smoke checks against the running AtlasBahamas stack."""
 
 from __future__ import annotations
 
@@ -92,7 +92,7 @@ def main() -> int:
         opener, jar, code, _, headers = login(tenant, "bahamas242")
         key = f"{tenant}_login"
         checks[key] = code in (301, 302) and "/tenant" in location(headers)
-        csrf = cookie_value(jar, "ATLAS_CSRF")
+        csrf = cookie_value(jar, "ATLASBAHAMAS_CSRF")
         checks[f"{tenant}_csrf"] = bool(csrf)
 
         c, body, _ = request(opener, "GET", "/tenant/maintenance/new")
@@ -119,7 +119,7 @@ def main() -> int:
     # Property-manager owner account.
     pm_opener, pm_jar, code, _, headers = login("landlord1", "bahamas242")
     checks["landlord1_login"] = code in (301, 302) and "/property-manager" in location(headers)
-    pm_csrf = cookie_value(pm_jar, "ATLAS_CSRF")
+    pm_csrf = cookie_value(pm_jar, "ATLASBAHAMAS_CSRF")
     checks["landlord1_csrf"] = bool(pm_csrf)
     c, b, _ = request(pm_opener, "GET", "/property-manager")
     checks["landlord1_dashboard"] = c == 200 and "Property Manager Dashboard" in b
@@ -159,7 +159,7 @@ def main() -> int:
     # Admin role.
     a_opener, a_jar, code, _, headers = login("jayuice", "PleaseDontDropThePumpkinPie")
     checks["admin_login"] = code in (301, 302) and "/admin" in location(headers)
-    a_csrf = cookie_value(a_jar, "ATLAS_CSRF")
+    a_csrf = cookie_value(a_jar, "ATLASBAHAMAS_CSRF")
     checks["admin_csrf"] = bool(a_csrf)
     c, b, _ = request(a_opener, "GET", "/admin")
     checks["admin_console"] = c == 200 and "Admin Console" in b
@@ -179,4 +179,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 

@@ -1,0 +1,16 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Request Maintenance</h2><p class="muted">Describe the issue. This sends an alert and a message thread to your property owner.</p></div></div>
+<div class="card" style="max-width:760px;">
+{{message_box}}
+{{lease_gate_notice}}
+<form method="POST" enctype="multipart/form-data" action="/tenant/maintenance/new">
+<fieldset {{form_disabled_attr}} style="border:0;padding:0;margin:0;display:grid;gap:10px;">
+<div class="field"><label>Issue Type</label><select name="issue_type"><option value="">General</option><option>Plumbing</option><option>Electrical</option><option>Appliance</option><option>HVAC</option><option>Security</option></select></div>
+<div class="field"><label>Urgency</label><select name="urgency"><option value="normal">Normal</option><option value="high">High</option><option value="emergency">Emergency</option></select></div>
+<div class="field"><label>Problem Description</label><textarea name="description" required placeholder="Example: Bathroom sink leaking..."></textarea></div>
+<div class="field"><label>Upload Photo (optional)</label><input type="file" name="photo" accept="image/jpeg,image/png,image/webp"></div>
+<button class="primary-btn" style="margin-top:12px;">{{submit_label}}</button>
+</fieldset>
+</form></div></div></section>
+
+

@@ -7,7 +7,7 @@
 
 ## STEP 1: CREATE .env FILE
 ```powershell
-cd D:\AtlasSimple\atlas\ATLAS1
+cd D:\AtlasBahamas\atlasbahamas\ATLAS1
 Copy-Item ".env.example" ".env" -Force
 ```
 
@@ -57,26 +57,26 @@ POSTGRES_PASSWORD=SecureDB_Pass123!456#789
 
 
 ### POSTGRES_DSN (PostgreSQL connection string)
-**Current:** `POSTGRES_DSN=postgresql://atlas:REPLACE_WITH_STRONG_DB_PASSWORD_min16chars@postgres:5432/atlas`
+**Current:** `POSTGRES_DSN=postgresql://atlasbahamas:REPLACE_WITH_STRONG_DB_PASSWORD_min16chars@postgres:5432/atlasbahamas`
 
 **Action:** Update the password part to match POSTGRES_PASSWORD above
 
 **Before:**
 ```
-POSTGRES_DSN=postgresql://atlas:REPLACE_WITH_STRONG_DB_PASSWORD_min16chars@postgres:5432/atlas
+POSTGRES_DSN=postgresql://atlasbahamas:REPLACE_WITH_STRONG_DB_PASSWORD_min16chars@postgres:5432/atlasbahamas
 ```
 
 **After (matching example passwords above):**
 ```
-POSTGRES_DSN=postgresql://atlas:SecureDB_Pass123!456#789@postgres:5432/atlas
+POSTGRES_DSN=postgresql://atlasbahamas:SecureDB_Pass123!456#789@postgres:5432/atlasbahamas
 ```
 
 **Format:** `postgresql://[USERNAME]:[PASSWORD]@[HOST]:[PORT]/[DATABASE]`
-- USERNAME: atlas (don't change)
+- USERNAME: atlasbahamas (don't change)
 - PASSWORD: must match POSTGRES_PASSWORD
 - HOST: postgres (don't change, Docker internal DNS)
 - PORT: 5432 (don't change)
-- DATABASE: atlas (don't change)
+- DATABASE: atlasbahamas (don't change)
 
 
 ### REDIS_PASSWORD (Cache password)
@@ -117,12 +117,12 @@ REDIS_URL=redis://:RedisCache_Pwd456!@redis:6379/0
 ## STEP 4: OPTIONAL CUSTOMIZATION (Recommended for production)
 
 ### DOMAIN (Your site's hostname)
-**Current:** `DOMAIN=atlas.example.com`
+**Current:** `DOMAIN=atlasbahamas.example.com`
 
 **Action:** Replace with your actual domain (or localhost for development)
 
 **Examples:**
-- Production: `DOMAIN=atlas.mycompany.com`
+- Production: `DOMAIN=atlasbahamas.mycompany.com`
 - Development: `DOMAIN=localhost`
 
 
@@ -137,7 +137,7 @@ SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-app-password
-SMTP_FROM=atlas@mycompany.com
+SMTP_FROM=atlasbahamas@mycompany.com
 ```
 
 **Leave empty** if not needed
@@ -205,7 +205,7 @@ SMTP_FROM=atlas@mycompany.com
 ## STEP 7: READY TO DEPLOY
 
 ```powershell
-cd D:\AtlasSimple\atlas\ATLAS1
+cd D:\AtlasBahamas\atlasbahamas\ATLAS1
 
 # Create storage directory if needed
 if (-not (Test-Path "D:\Storage")) {
@@ -233,7 +233,7 @@ curl http://localhost/
 1. Open .env
 2. Find POSTGRES_PASSWORD value: `SecureDB_Pass123!456#789`
 3. Find POSTGRES_DSN and verify it contains same password:
-   `postgresql://atlas:SecureDB_Pass123!456#789@postgres:5432/atlas`
+   `postgresql://atlasbahamas:SecureDB_Pass123!456#789@postgres:5432/atlasbahamas`
 4. If mismatch, update POSTGRES_DSN to match
 5. Rebuild: `docker compose down && docker compose up -d --build`
 
@@ -255,9 +255,9 @@ curl http://localhost/
 
 **Solution:**
 1. Check POSTGRES_DSN format:
-   - Must be: `postgresql://atlas:[PASSWORD]@postgres:5432/atlas`
+   - Must be: `postgresql://atlasbahamas:[PASSWORD]@postgres:5432/atlasbahamas`
    - HOST must be `postgres` (not 127.0.0.1 or localhost)
-2. Verify POSTGRES_USER=atlas matches POSTGRES_DSN
+2. Verify POSTGRES_USER=atlasbahamas matches POSTGRES_DSN
 3. Check logs: `docker compose logs postgres --tail=50`
 4. If Postgres failed to init, delete volume and rebuild:
    ```powershell
@@ -293,7 +293,7 @@ My"Pass\123;etc    ← Contains ", \, ; which need escaping
 
 **Solution:**
 ```powershell
-cd D:\AtlasSimple\atlas\ATLAS1
+cd D:\AtlasBahamas\atlasbahamas\ATLAS1
 Copy-Item ".env.example" ".env" -Force
 # Now edit .env
 notepad .env
@@ -353,5 +353,6 @@ $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%"
 ---
 
 **Next:** Run `docker compose up -d --build` and follow VALIDATION_CHECKLIST.md
+
 
 

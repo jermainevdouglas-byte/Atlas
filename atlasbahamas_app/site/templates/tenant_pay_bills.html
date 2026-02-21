@@ -1,0 +1,12 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Pay Bill</h2><p class="muted">Choose a provider and amount.</p></div></div>
+<div class="card" style="max-width:720px;">
+{{message_box}}
+<form method="POST" action="/tenant/pay-bills">
+<div class="field"><label>Provider</label><select name="provider" required>
+<option>Cable Bahamas</option><option>Aliv</option><option>BTC</option><option>BPL</option>
+</select></div>
+<div class="field" style="margin-top:10px;"><label>Amount Depositing</label><input type="number" name="amount" min="1" required></div>
+<button class="primary-btn" style="margin-top:12px;">Submit Bill Payment</button>
+</form></div></div></section>
+

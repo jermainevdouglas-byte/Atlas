@@ -7,7 +7,7 @@ import importlib.util
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_DB = ROOT / "data" / "atlas.sqlite"
+DEFAULT_DB = ROOT / "data" / "atlasbahamas.sqlite"
 DEFAULT_BACKUP_DIR = ROOT / "data" / "backups"
 
 
@@ -17,7 +17,7 @@ def timestamp():
 
 def backup_db(db_path: Path, backup_dir: Path):
     backup_dir.mkdir(parents=True, exist_ok=True)
-    out = backup_dir / f"atlas_{timestamp()}.sqlite"
+    out = backup_dir / f"atlasbahamas_{timestamp()}.sqlite"
     shutil.copy2(db_path, out)
     print(f"backup_created={out}")
 
@@ -46,7 +46,7 @@ def integrity_check(db_path: Path):
 
 def run_migrations():
     mod_path = ROOT / "server.py"
-    spec = importlib.util.spec_from_file_location("atlas_server", mod_path)
+    spec = importlib.util.spec_from_file_location("atlasbahamas_server", mod_path)
     if not spec or not spec.loader:
         raise SystemExit("cannot_load_server_module")
     mod = importlib.util.module_from_spec(spec)
@@ -56,7 +56,7 @@ def run_migrations():
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Atlas DB backup/restore/integrity/migrate tooling.")
+    parser = argparse.ArgumentParser(description="AtlasBahamas DB backup/restore/integrity/migrate tooling.")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
     p_backup = sub.add_parser("backup", help="Create timestamped DB backup.")
@@ -86,5 +86,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 

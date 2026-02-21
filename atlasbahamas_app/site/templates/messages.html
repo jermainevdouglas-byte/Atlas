@@ -1,0 +1,31 @@
+<section class="dash"><div class="container">
+<div class="dash-top">
+<div><h2>Messages</h2><p class="muted">Threaded messages with read state and attachments.</p></div>
+<a class="ghost-btn" href="/notifications">View alerts</a>
+</div>
+<div class="notice"><b>Threaded messages</b> are live. Start a thread or continue an existing one.</div>
+{{message_box}}
+<div class="grid2" style="margin-top:10px;">
+  <div class="card">
+    <h3 style="margin-top:0;">Start Thread</h3>
+    <form method="POST" action="/messages/new" enctype="multipart/form-data">
+      <div class="field"><label>Recipient (username/email/account)</label><input name="recipient" required placeholder="username"></div>
+      <div class="field"><label>Subject</label><input name="subject" required placeholder="Lease reminder"></div>
+      <div class="row">
+        <div class="field" style="flex:1;"><label>Context Type</label><select name="context_type"><option value="">General</option><option value="listing">Listing</option><option value="property">Property</option><option value="maintenance">Maintenance</option></select></div>
+        <div class="field" style="flex:1;"><label>Context ID</label><input name="context_id" placeholder="Optional"></div>
+      </div>
+      <div class="field"><label>Message</label><textarea name="body" required placeholder="Type your message..."></textarea></div>
+      <div class="field"><label>Attachment (optional)</label><input type="file" name="attachment" accept=".pdf,.jpg,.jpeg,.png,.webp,.txt"></div>
+      <button class="primary-btn" type="submit">Send</button>
+    </form>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0;">My Threads</h3>
+    {{threads_rows}}
+    {{threads_empty}}
+  </div>
+</div>
+{{thread_view}}
+</div></section>
+

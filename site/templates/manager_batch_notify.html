@@ -1,0 +1,15 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Mass Notifications</h2><p class="muted">Send one message to all active tenants for a property.</p><div style="margin-top:10px;"><a class="ghost-btn" href="/manager">Back to Dashboard</a></div></div></div>
+{{message_box}}
+<div class="card" style="max-width:980px;">
+  <form method="POST" action="/manager/batch-notify">
+    <div class="row">
+      <div class="field" style="flex:1;"><label>Property</label><select name="property_id" required><option value="">Select...</option>{{property_options}}</select></div>
+      <div class="field" style="flex:1;"><label>Subject</label><input name="subject" required placeholder="Important building update"></div>
+    </div>
+    <div class="field" style="margin-top:10px;"><label>Message</label><textarea name="body" rows="5" required placeholder="Write your notice..."></textarea></div>
+    <button class="primary-btn" style="margin-top:12px;">Send Notification</button>
+  </form>
+</div>
+</div></section>
+

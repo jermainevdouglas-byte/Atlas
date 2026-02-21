@@ -1,0 +1,19 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Listings</h2><p class="muted">Refine by price, location, bedrooms, and category.</p></div></div>
+<div class="card">
+<div class="row" style="align-items:flex-end;">
+<div class="field" style="flex:1;"><label>Max Price</label><input id="maxPrice" type="number" min="0" placeholder="2500"></div>
+<div class="field" style="flex:1;"><label>Location</label><select id="location"><option value="">Any</option>{{location_options}}</select></div>
+<div class="field" style="flex:1;"><label>Bedrooms (min)</label><input id="beds" type="number" min="0" placeholder="2"></div>
+<div class="field" style="flex:1;"><label>Category</label>
+<select id="category"><option value="">All</option><option>Short Term Rental</option><option>Long Term Rental</option><option>Vehicle Rental</option><option>Sell Your Property to Us</option></select></div>
+<button id="applyFilters" class="primary-btn">Search</button>
+<button id="openCompare" class="ghost-btn" type="button">Compare</button>
+{{save_search_button}}
+</div>
+<div class="muted" style="margin-top:10px;" id="resultCount"></div>
+<div id="compareTray" class="notice" style="margin-top:10px;display:none;"></div>
+</div>
+<div id="listingResults" style="display:grid;gap:10px;margin-top:12px;"></div>
+</div></section>
+

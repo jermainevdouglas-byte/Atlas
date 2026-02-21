@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""SQLite -> PostgreSQL migration tool for Atlas."""
+"""SQLite -> PostgreSQL migration tool for AtlasBahamas."""
 from __future__ import annotations
 
 import argparse
@@ -16,7 +16,7 @@ except Exception:  # pragma: no cover - optional in local sqlite-only runs
     psycopg = None
 
 BASE_DIR = Path(__file__).resolve().parents[1]
-DEFAULT_SQLITE = Path(os.getenv("DATABASE_PATH", str(BASE_DIR / "data" / "atlas.sqlite")))
+DEFAULT_SQLITE = Path(os.getenv("DATABASE_PATH", str(BASE_DIR / "data" / "atlasbahamas.sqlite")))
 DEFAULT_PG_DSN = os.getenv("POSTGRES_DSN", "")
 
 
@@ -38,7 +38,7 @@ class IndexMeta:
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Migrate Atlas SQLite data to PostgreSQL")
+    p = argparse.ArgumentParser(description="Migrate AtlasBahamas SQLite data to PostgreSQL")
     p.add_argument("--sqlite", default=str(DEFAULT_SQLITE), help="Path to source SQLite file")
     p.add_argument("--pg-dsn", default=DEFAULT_PG_DSN, help="Target PostgreSQL DSN")
     p.add_argument("--verify-only", action="store_true", help="Only verify SQLite + PostgreSQL connectivity")
@@ -213,7 +213,7 @@ def topo_sort_tables(tables: dict[str, TableMeta]) -> list[str]:
     while deps_map:
         ready = sorted(name for name, deps in deps_map.items() if not deps)
         if not ready:
-            # Should not happen for Atlas schema, but keep deterministic behavior.
+            # Should not happen for AtlasBahamas schema, but keep deterministic behavior.
             ready = [sorted(deps_map.keys())[0]]
         for name in ready:
             order.append(name)
@@ -458,4 +458,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 

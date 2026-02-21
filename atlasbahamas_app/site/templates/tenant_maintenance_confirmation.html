@@ -1,0 +1,22 @@
+<section class="public"><div class="public-inner">
+<div class="card" style="max-width:720px;margin:30px auto;">
+  {{message_box}}
+  <h2 style="margin-top:0;">Maintenance Request Submitted</h2>
+  <p class="muted">Your request was delivered to the property manager team.</p>
+  <div class="grid-3" style="margin-top:12px;">
+    <div class="stat"><div class="muted">Request ID</div><div class="stat-num">#{{request_id}}</div></div>
+    <div class="stat"><div class="muted">Priority</div><div class="stat-num">{{urgency_badge}}</div></div>
+    <div class="stat"><div class="muted">Status</div><div class="stat-num">{{status_badge}}</div></div>
+  </div>
+  <div class="row" style="margin-top:12px;">
+    <div class="stat" style="flex:1;"><div class="muted">Created</div><div>{{created_at}}</div></div>
+    <div class="stat" style="flex:2;"><div class="muted">Summary</div><div>{{description}}</div></div>
+  </div>
+  <div class="row" style="margin-top:16px;">
+    <a class="primary-btn" href="/tenant/maintenance/{{request_id}}">Open Request</a>
+    <a class="ghost-btn" href="/tenant/maintenance">My Maintenance</a>
+    <a class="ghost-btn" href="/tenant">Back to Dashboard</a>
+  </div>
+</div>
+</div></section>
+

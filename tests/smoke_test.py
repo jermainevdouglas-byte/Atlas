@@ -14,7 +14,7 @@ from pathlib import Path
 
 
 BASE_DIR = Path(__file__).resolve().parents[1]
-PORT = int(os.getenv("ATLAS_TEST_PORT", "5091"))
+PORT = int(os.getenv("ATLASBAHAMAS_TEST_PORT", "5091"))
 
 
 def build_opener():
@@ -48,12 +48,24 @@ def main():
     env = os.environ.copy()
     env["HOST"] = "127.0.0.1"
     env["PORT"] = str(PORT)
-    env["DATABASE_PATH"] = str(BASE_DIR / "data" / "atlas.sqlite")
+    env["DATABASE_PATH"] = str(BASE_DIR / "data" / "atlasbahamas.sqlite")
+    env["SEED_DEMO_DATA"] = "1"
+    env["CLEAR_SESSIONS_ON_START"] = "0"
+    env["PROD_MODE"] = "0"
     p = subprocess.Popen([sys.executable, "server.py"], cwd=BASE_DIR, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     try:
-        time.sleep(1.2)
         opener, jar = build_opener()
+        for _ in range(120):
+            try:
+                hc, _, _ = req(opener, "GET", "/health")
+                if hc == 200:
+                    break
+            except Exception:
+                pass
+            time.sleep(0.1)
+        else:
+            raise SystemExit("server_not_ready")
 
         checks = {}
         c, home, _ = req(opener, "GET", "/")
@@ -85,7 +97,7 @@ def main():
 
         c, _, _ = req(opener, "POST", "/login", {"username": "admin1", "password": "AtlasAdmin!1"})
         checks["login_redirect"] = c in (200, 302)
-        csrf = get_cookie(jar, "ATLAS_CSRF")
+        csrf = get_cookie(jar, "ATLASBAHAMAS_CSRF")
         checks["csrf_cookie_set"] = bool(csrf)
 
         c, profile, _ = req(opener, "GET", "/profile")
@@ -99,17 +111,17 @@ def main():
 
         c, body, _ = req(opener, "POST", "/notifications/readall", {"csrf_token": csrf})
         ok_json = False
+        ok_html = "All alerts marked as read" in body
         try:
             ok_json = json.loads(body).get("ok") is True
         except Exception:
             ok_json = False
-        ok_redirect_html = "All alerts marked as read." in body or "alerts-page" in body
-        checks["csrf_allows_valid_token"] = c in (200, 302) and (ok_json or ok_redirect_html)
+        checks["csrf_allows_valid_token"] = c == 200 and (ok_json or ok_html)
 
         c, profile2, _ = req(opener, "POST", "/profile/update", {
-            "full_name": "Atlas Admin",
+            "full_name": "AtlasBahamas Admin",
             "phone": "2420000999",
-            "email": "admin@atlas.local",
+            "email": "admin@atlasbahamas.local",
             "current_password": "",
             "new_password": "",
             "new_password2": "",
@@ -137,7 +149,7 @@ def main():
         )
         c, mgr_listing_requests, _ = req(mgr_opener, "GET", "/manager/listings")
         checks["manager_cannot_open_manage_listings"] = c == 200 and "Listing Submissions" in mgr_listing_requests
-        csrf_mgr = get_cookie(mgr_jar, "ATLAS_CSRF")
+        csrf_mgr = get_cookie(mgr_jar, "ATLASBAHAMAS_CSRF")
         c, mgr_action_result, _ = req(mgr_opener, "POST", "/manager/listings/action", {
             "listing_id": "1",
             "action": "approve",
@@ -166,7 +178,7 @@ def main():
             "/api/units?property_id=" in landlord_tenants
         )
 
-        csrf_ll = get_cookie(ll_jar, "ATLAS_CSRF")
+        csrf_ll = get_cookie(ll_jar, "ATLASBAHAMAS_CSRF")
         req(ll_opener, "POST", "/landlord/property/new", {
             "name": f"Invite Smoke {int(time.time())}",
             "location": "Nassau",
@@ -199,7 +211,7 @@ def main():
             "csrf_token": csrf,
         })
         checks["admin_approve_all_submissions"] = c == 200 and "Listing Submissions" in approve_all_result
-        conn = sqlite3.connect(str(BASE_DIR / "data" / "atlas.sqlite"))
+        conn = sqlite3.connect(str(BASE_DIR / "data" / "atlasbahamas.sqlite"))
         pending_after = conn.execute(
             "SELECT COUNT(*) FROM listing_requests WHERE property_id=? AND status='pending'",
             (property_id,),
@@ -209,7 +221,7 @@ def main():
 
         t_opener, t_jar = build_opener()
         c, _, _ = req(t_opener, "POST", "/login", {"username": "tenant1", "password": "AtlasTenant!1"})
-        csrf_t = get_cookie(t_jar, "ATLAS_CSRF")
+        csrf_t = get_cookie(t_jar, "ATLASBAHAMAS_CSRF")
         c, tenant_home, _ = req(t_opener, "GET", "/tenant")
         checks["tenant_toolbar_hides_invites"] = c == 200 and "/tenant/invites" not in tenant_home and "Alerts" in tenant_home
         c, tenant_alerts, _ = req(t_opener, "GET", "/notifications")
@@ -241,4 +253,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

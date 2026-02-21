@@ -1,0 +1,55 @@
+<section class="dash"><div class="container">
+<div class="dash-header">
+  <div><h2>Admin Console</h2><p class="muted">Unrestricted access to all dashboards and admin panels.</p></div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <h3>Role Dashboards</h3>
+    <div class="row" style="flex-wrap:wrap;gap:10px;margin-top:10px;">
+      <a class="secondary-btn" href="/tenant">Tenant</a>
+      <a class="secondary-btn" href="/property-manager">Property Manager</a>
+      <a class="secondary-btn" href="/manager">Operations Tools</a>
+      <a class="secondary-btn" href="/admin/submissions">Submission Queue</a>
+    </div>
+    <p class="muted" style="margin-top:10px;">Admin can access all role views, while legacy landlord pages are kept only for backwards compatibility.</p>
+  </div>
+
+  <div class="card">
+    <h3>Admin Panels</h3>
+    <div class="row" style="flex-wrap:wrap;gap:10px;margin-top:10px;">
+      <a class="secondary-btn" href="/manager/leases">Leases</a>
+      <a class="secondary-btn" href="/manager/maintenance">Maintenance</a>
+      <a class="secondary-btn" href="/manager/payments">Payments</a>
+      <a class="secondary-btn" href="/manager/listings">Listings</a>
+      <a class="secondary-btn" href="/manager/applications">Applications</a>
+      <a class="secondary-btn" href="/manager/inquiries">Inquiries</a>
+      <a class="secondary-btn" href="/manager/inspections">Inspections</a>
+      <a class="secondary-btn" href="/manager/preventive">Preventive</a>
+      <a class="secondary-btn" href="/admin/users">User Roles</a>
+      <a class="secondary-btn" href="/admin/permissions">Role Permissions</a>
+      <a class="secondary-btn" href="/admin/audit">Audit Log</a>
+      <a class="secondary-btn" href="/property-manager/search">Global Search</a>
+      <a class="secondary-btn" href="/notifications">Alerts</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:18px;">
+  <h3>Quick stats</h3>
+  <div class="grid-3" style="margin-top:10px;">
+    <div class="stat"><div class="muted">Users</div><div class="stat-num">{{stat_users}}</div></div>
+    <div class="stat"><div class="muted">Listings</div><div class="stat-num">{{stat_listings}}</div></div>
+    <div class="stat"><div class="muted">Properties</div><div class="stat-num">{{stat_properties}}</div></div>
+    <div class="stat"><div class="muted">Open Maintenance</div><div class="stat-num">{{stat_open_maint}}</div></div>
+    <div class="stat"><div class="muted">Open Inquiries</div><div class="stat-num">{{stat_inq}}</div></div>
+    <div class="stat"><div class="muted">Pending Applications</div><div class="stat-num">{{stat_apps}}</div></div>
+  </div>
+</div>
+{{system_health_cards}}
+{{pending_actions_cards}}
+{{ops_cards}}
+
+</div></section>
+
+

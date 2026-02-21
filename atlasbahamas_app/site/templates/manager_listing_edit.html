@@ -1,0 +1,57 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Edit Listing #{{listing_id}}</h2><p class="muted">Update details and manage photos.</p></div><a class="ghost-btn" href="/manager/listings">Back</a></div>
+
+<div class="grid2">
+  <div class="card">
+    <h3 style="margin-top:0;">Details</h3>
+    <form method="POST" action="/manager/listings/edit">
+      <input type="hidden" name="listing_id" value="{{listing_id}}">
+      <div><label>Title</label><input name="title" value="{{listing_title}}" required></div>
+      <div class="grid2">
+        <div><label>Price</label><input name="price" value="{{price}}" required></div>
+        <div><label>Location</label><input name="location" value="{{location}}" required></div>
+      </div>
+      <div class="grid2">
+        <div><label>Beds</label><input name="beds" value="{{beds}}" required></div>
+        <div><label>Baths</label><input name="baths" value="{{baths}}" required></div>
+      </div>
+      <div><label>Category</label>
+        <select name="category">
+          <option {{cat_short}}>Short Term Rental</option>
+          <option {{cat_long}}>Long Term Rental</option>
+          <option {{cat_vehicle}}>Vehicle Rental</option>
+          <option {{cat_sell}}>Sell Your Property to Us</option>
+        </select>
+      </div>
+      <div><label>Description</label><textarea name="description" rows="5" required>{{description}}</textarea></div>
+      <div class="row" style="margin-top:12px;gap:10px;flex-wrap:wrap;">
+        <button class="btn" type="submit">Save changes</button>
+        <a class="btn ghost" href="/manager/listings">Cancel</a>
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Photos</h3>
+    <p class="muted">Upload up to 5 images at a time (JPG/PNG/WEBP, max 5MB each). Set one as thumbnail.</p>
+    <form method="POST" action="/manager/listings/photos" enctype="multipart/form-data">
+      <input type="hidden" name="listing_id" value="{{listing_id}}">
+      <div class="grid2">
+        <div><input type="file" name="photo1" accept="image/*"></div>
+        <div><input type="file" name="photo2" accept="image/*"></div>
+        <div><input type="file" name="photo3" accept="image/*"></div>
+        <div><input type="file" name="photo4" accept="image/*"></div>
+        <div><input type="file" name="photo5" accept="image/*"></div>
+      </div>
+      <div class="row" style="margin-top:10px;">
+        <button class="btn" type="submit">Upload</button>
+      </div>
+    </form>
+
+    <div style="margin-top:14px;">
+      {{photos_admin}}
+    </div>
+  </div>
+</div>
+</div></section>
+

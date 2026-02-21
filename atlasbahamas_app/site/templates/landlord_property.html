@@ -1,0 +1,37 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>{{prop_name}}</h2><p class="muted">{{prop_location}} &bull; {{prop_type}} &bull; {{prop_units}} units</p><div style="margin-top:10px;"><a class="ghost-btn" href="/landlord">Back to Dashboard</a></div></div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <a class="ghost-btn" href="/landlord/properties">Back</a>
+    <a class="ghost-btn" href="/landlord/export/property_units?property_id={{property_id}}">Export Units CSV</a>
+  </div>
+</div>
+{{message_box}}
+{{property_summary}}
+{{unit_filters}}
+{{bulk_actions}}
+
+<div class="card"><h3 style="margin-top:0;">Units</h3>
+<p class="muted" style="margin-top:-6px;">Edit rent and vacancy in real time. Save per unit.</p>
+<table class="table"><thead><tr><th>Unit</th><th>Occupied</th><th>Beds</th><th>Baths</th><th>Rent</th><th>Actions</th></tr></thead><tbody>{{units_rows}}</tbody></table>
+</div>
+
+<div class="card"><h3 style="margin-top:0;">Submit for Listing</h3>
+<p class="muted" style="margin-top:-6px;">Send a unit to Admin for approval (add photos + optional lease PDF).</p>
+<form method="POST" action="/landlord/listing/submit_all" class="row" style="margin:8px 0 12px 0;align-items:flex-end;">
+  <input type="hidden" name="property_id" value="{{property_id}}">
+  <div class="field" style="min-width:260px;flex:1;">
+    <label>Category for all units</label>
+    <select name="category" required>
+      <option value="Long Term Rental">Long Term Rental</option>
+      <option value="Short Term Rental">Short Term Rental</option>
+      <option value="Vehicle Rental">Vehicle Rental</option>
+      <option value="Sell Your Property to Us">Sell Your Property to Us</option>
+    </select>
+  </div>
+  <button class="primary-btn" type="submit">Submit All Units</button>
+</form>
+<div style="display:flex;gap:10px;flex-wrap:wrap;">{{submit_buttons}}</div>
+</div>
+
+</div></section>
+

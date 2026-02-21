@@ -1,18 +1,18 @@
 # ====================================================================
 # ATLAS DOCKER - QUICK START GUIDE (Windows)
 # ====================================================================
-# TL;DR - Get Atlas running in 5 minutes
+# TL;DR - Get AtlasBahamas running in 5 minutes
 # ====================================================================
 
 ## PREREQUISITES
 - Docker Desktop for Windows installed and running
-- D:\AtlasSimple\atlas\ATLAS1\ as project directory
+- D:\AtlasBahamas\atlasbahamas\ATLAS1\ as project directory
 - D:\Storage directory (will be created if missing)
 
 
 ## STEP 1: PREPARE (.env file)
 ```powershell
-cd D:\AtlasSimple\atlas\ATLAS1
+cd D:\AtlasBahamas\atlasbahamas\ATLAS1
 Copy-Item ".env.example" ".env" -Force
 ```
 
@@ -27,7 +27,7 @@ Example:
 ```
 SECRET_KEY=abc123def456ghi789jkl012mno345pqr789xyz!@#$%^&*abcdefghijklmnop
 POSTGRES_PASSWORD=MyStrongPassword123!
-POSTGRES_DSN=postgresql://atlas:MyStrongPassword123!@postgres:5432/atlas
+POSTGRES_DSN=postgresql://atlasbahamas:MyStrongPassword123!@postgres:5432/atlasbahamas
 ```
 
 
@@ -69,7 +69,7 @@ curl http://localhost/
 
 **Containers won't start?**
 ```powershell
-docker compose logs --tail=50 atlas_app
+docker compose logs --tail=50 atlasbahamas_app
 ```
 
 **Port 80 already in use?**
@@ -113,10 +113,10 @@ docker compose stop
 docker compose start
 
 # Restart one service
-docker compose restart atlas_app
+docker compose restart atlasbahamas_app
 
 # View logs
-docker compose logs -f atlas_app
+docker compose logs -f atlasbahamas_app
 ```
 
 
@@ -124,5 +124,6 @@ docker compose logs -f atlas_app
 For detailed instructions, see: RUNBOOK_WINDOWS.ps1
 For validation checklist, see: VALIDATION_CHECKLIST.md
 For troubleshooting, see: TROUBLESHOOTING_WINDOWS.md
+
 
 

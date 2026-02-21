@@ -1,0 +1,33 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Assign Leases</h2><p class="muted">Select tenant, property and unit.</p></div></div>
+{{message_box}}
+<div class="card" style="max-width:980px;">
+<form method="POST" action="/manager/leases" id="leaseForm" enctype="multipart/form-data">
+<div class="row">
+<div class="field" style="flex:1;"><label>Tenant</label><select name="tenant_account" required>{{tenant_options}}</select></div>
+<div class="field" style="flex:1;"><label>Property</label><select name="property_id" id="propertySelect" required><option value="">Select...</option>{{property_options}}</select></div>
+</div>
+<div class="row" style="margin-top:10px;">
+<div class="field" style="flex:1;"><label>Unit</label><select name="unit_label" id="unitSelect" required><option value="">Select...</option></select></div>
+<div class="field" style="flex:1;"><label>Start Date</label><input type="date" name="start_date" required></div>
+</div>
+<div class="field" style="margin-top:10px;"><label>Lease Document (PDF, optional)</label><input type="file" name="lease_pdf" accept="application/pdf"></div>
+<button class="primary-btn" style="margin-top:12px;">Assign Lease</button>
+</form>
+<h3 style="margin-top:18px;">Recent Leases</h3>
+{{filters_form}}
+<table class="table"><thead><tr><th>Tenant</th><th>Property</th><th>Unit</th><th>Start</th><th>End</th><th>Status</th><th>Split</th><th>E-Sign</th><th>Document</th><th>Actions</th></tr></thead><tbody>{{leases_rows}}</tbody></table>{{pager_box}}
+</div>
+<div class="card" style="margin-top:12px;max-width:980px;">
+<h3 style="margin-top:0;">Roommate Split Payments</h3>
+<form method="POST" action="/manager/roommates/add">
+  <div class="row">
+    <div class="field" style="flex:1;"><label>Lease</label><select name="lease_id" required><option value="">Select active lease...</option>{{roommate_lease_options}}</select></div>
+    <div class="field" style="flex:1;"><label>Roommate Tenant</label><select name="roommate_account" required><option value="">Select tenant...</option>{{tenant_options}}</select></div>
+    <div class="field" style="flex:1;"><label>Share Percent</label><input type="number" min="1" max="100" name="share_percent" value="50" required></div>
+  </div>
+  <button class="primary-btn" style="margin-top:12px;">Add Roommate Split</button>
+</form>
+<table class="table" style="margin-top:12px;"><thead><tr><th>Lease</th><th>Tenant</th><th>Share %</th><th>Status</th><th>Action</th></tr></thead><tbody>{{roommate_rows}}</tbody></table>
+</div></div></section>
+

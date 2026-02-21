@@ -1,0 +1,13 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Listing Submissions</h2><p class="muted">Pending submissions awaiting approval.</p></div><a class="ghost-btn" href="/admin">Back to Admin</a></div>
+<div class="card">
+{{filters_form}}
+{{bulk_actions}}
+<table class="table">
+<thead><tr><th>ID</th><th>Title</th><th>Property</th><th>Unit</th><th>Price</th><th>Status</th><th>Checklist</th><th>Review Note</th><th>Actions</th></tr></thead>
+<tbody>{{rows}}</tbody>
+</table>
+{{empty}}
+</div>
+</div></section>
+

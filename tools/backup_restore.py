@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""SQLite backup + restore verification tooling for Atlas.
+"""SQLite backup + restore verification tooling for AtlasBahamas.
 
 Usage examples:
   py -3 tools/backup_restore.py backup
   py -3 tools/backup_restore.py list
   py -3 tools/backup_restore.py restore-test --latest
-  py -3 tools/backup_restore.py restore --file data/backups/atlas_YYYYMMDD_HHMMSS.sqlite
+  py -3 tools/backup_restore.py restore --file data/backups/atlasbahamas_YYYYMMDD_HHMMSS.sqlite
 """
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parents[1]
-DEFAULT_DB = Path(os.getenv("DATABASE_PATH", str(BASE_DIR / "data" / "atlas.sqlite")))
+DEFAULT_DB = Path(os.getenv("DATABASE_PATH", str(BASE_DIR / "data" / "atlasbahamas.sqlite")))
 BACKUP_DIR = Path(os.getenv("BACKUP_DIR", str(BASE_DIR / "data" / "backups")))
 RETENTION_COUNT = max(3, int(os.getenv("BACKUP_RETENTION_COUNT", "14")))
 RETENTION_DAYS = max(1, int(os.getenv("BACKUP_RETENTION_DAYS", "30")))
@@ -57,7 +57,7 @@ def _required_tables_ok(db_path: Path) -> tuple[bool, list[str]]:
 
 
 def _backup_filename() -> str:
-    base = f"atlas_{_now_stamp()}.sqlite"
+    base = f"atlasbahamas_{_now_stamp()}.sqlite"
     return base + (".gz" if USE_GZIP else "")
 
 
@@ -66,7 +66,7 @@ def create_backup(src: Path, backup_dir: Path) -> Path:
         raise FileNotFoundError(f"Database not found: {src}")
     backup_dir.mkdir(parents=True, exist_ok=True)
     out = backup_dir / _backup_filename()
-    tmp_raw = backup_dir / f"atlas_{_now_stamp()}_tmp.sqlite"
+    tmp_raw = backup_dir / f"atlasbahamas_{_now_stamp()}_tmp.sqlite"
 
     src_conn = sqlite3.connect(str(src), timeout=30)
     try:
@@ -97,7 +97,7 @@ def create_backup(src: Path, backup_dir: Path) -> Path:
 def _iter_backups(backup_dir: Path):
     if not backup_dir.exists():
         return []
-    files = [p for p in backup_dir.glob("atlas_*.sqlite*") if p.is_file()]
+    files = [p for p in backup_dir.glob("atlasbahamas_*.sqlite*") if p.is_file()]
     return sorted(files, key=lambda p: p.stat().st_mtime, reverse=True)
 
 
@@ -115,7 +115,7 @@ def list_backups(backup_dir: Path) -> list[Path]:
 
 
 def _extract_backup_to_temp(backup_file: Path) -> Path:
-    td = Path(tempfile.mkdtemp(prefix="atlas_restore_test_"))
+    td = Path(tempfile.mkdtemp(prefix="atlasbahamas_restore_test_"))
     out = td / "restore_test.sqlite"
     if backup_file.suffix == ".gz":
         with gzip.open(backup_file, "rb") as rf, open(out, "wb") as wf:
@@ -148,7 +148,7 @@ def restore(backup_file: Path, target_db: Path) -> None:
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Atlas backup/restore tool")
+    p = argparse.ArgumentParser(description="AtlasBahamas backup/restore tool")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     b = sub.add_parser("backup", help="Create backup")
@@ -203,4 +203,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 

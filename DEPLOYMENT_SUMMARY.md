@@ -2,7 +2,7 @@
 # ATLAS DOCKER DEPLOYMENT SUMMARY
 # ====================================================================
 # Production-Ready Setup for Windows Docker Desktop
-# Project: D:\AtlasSimple\atlas\ATLAS1\
+# Project: D:\AtlasBahamas\atlasbahamas\ATLAS1\
 # Generated: 2025
 # ====================================================================
 
@@ -10,12 +10,12 @@
 
 ### 1. DOCKER CONFIGURATION FILES
 - ✓ **docker-compose.yml** (2.5 KB)
-  - 4 services: atlas_app, postgres, redis, nginx
+  - 4 services: atlasbahamas_app, postgres, redis, nginx
   - Health checks with service dependencies
   - Volume mounts including D:\Storage → /app/storage
   - Restart policies (unless-stopped)
   - Logging configuration (json-file, 10m limit)
-  - Network: atlas_network (bridge)
+  - Network: atlasbahamas_network (bridge)
 
 - ✓ **Dockerfile** (776 bytes)
   - Python 3.12-slim base image
@@ -26,7 +26,7 @@
   - Pre-created directories: /app/data, /app/logs, /app/uploads, /app/storage
 
 - ✓ **nginx.conf** (2.9 KB)
-  - Reverse proxy to atlas_app:5000
+  - Reverse proxy to atlasbahamas_app:5000
   - X-Forwarded-* headers preservation
   - Gzip compression enabled
   - WebSocket support
@@ -94,7 +94,7 @@
 
 ### 4. BUILD VERIFICATION
 - ✓ **Docker build test passed**
-  - Image: atlas_test:latest
+  - Image: atlasbahamas_test:latest
   - All dependencies installed:
     - Flask 3.1.1 ✓
     - Gunicorn 23.0.0 ✓
@@ -109,7 +109,7 @@
 
 ## FILE LOCATIONS
 ```
-D:\AtlasSimple\atlas\ATLAS1\
+D:\AtlasBahamas\atlasbahamas\ATLAS1\
 ├── docker-compose.yml              [UPDATED] ← Primary deployment file
 ├── Dockerfile                       [UPDATED] ← App container image
 ├── nginx.conf                       [UPDATED] ← Reverse proxy config
@@ -122,7 +122,7 @@ D:\AtlasSimple\atlas\ATLAS1\
 ├── TROUBLESHOOTING_WINDOWS.md       [NEW] ← 15-section issue resolution guide
 │
 ├── wsgi.py                          [EXISTING] ← Gunicorn WSGI entrypoint
-├── atlas_app/wsgi_adapter.py        [EXISTING] ← BaseHTTPRequestHandler adapter
+├── atlasbahamas_app/wsgi_adapter.py        [EXISTING] ← BaseHTTPRequestHandler adapter
 ├── requirements.txt                 [EXISTING] ← Python dependencies
 ├── data/                            [EXISTING] ← SQLite, logs, uploads
 ├── site/                            [EXISTING] ← Static files
@@ -134,7 +134,7 @@ D:\AtlasSimple\atlas\ATLAS1\
 
 ### FIRST-TIME SETUP (Run once)
 ```powershell
-cd D:\AtlasSimple\atlas\ATLAS1
+cd D:\AtlasBahamas\atlasbahamas\ATLAS1
 Copy-Item ".env.example" ".env" -Force
 # Edit .env file in Notepad: notepad .env
 # Replace: SECRET_KEY, POSTGRES_PASSWORD, POSTGRES_DSN
@@ -144,7 +144,7 @@ if (-not (Test-Path ".\ssl")) { New-Item -ItemType Directory -Path ".\ssl" -Forc
 
 ### BUILD & DEPLOY
 ```powershell
-cd D:\AtlasSimple\atlas\ATLAS1
+cd D:\AtlasBahamas\atlasbahamas\ATLAS1
 docker compose up -d --build
 Start-Sleep -Seconds 40
 docker compose ps
@@ -153,13 +153,13 @@ docker compose ps
 ### QUICK VERIFICATION
 ```powershell
 curl http://localhost/
-docker compose exec -T postgres psql -U atlas -d atlas -c "SELECT version();"
+docker compose exec -T postgres psql -U atlasbahamas -d atlasbahamas -c "SELECT version();"
 docker compose exec -T redis redis-cli PING
 ```
 
 ### VIEW LOGS
 ```powershell
-docker compose logs -f atlas_app                   # App logs
+docker compose logs -f atlasbahamas_app                   # App logs
 docker compose logs postgres --tail=50             # DB init
 docker compose logs redis --tail=50                # Cache init
 docker compose logs nginx --tail=50                # Proxy
@@ -169,7 +169,7 @@ docker compose logs nginx --tail=50                # Proxy
 ```powershell
 docker compose stop                    # Graceful stop (data persists)
 docker compose start                   # Resume services
-docker compose restart atlas_app       # Restart one service
+docker compose restart atlasbahamas_app       # Restart one service
 docker compose down                    # Stop & remove containers (volumes persist)
 docker compose down -v                 # CAUTION: Delete all data
 ```
@@ -186,7 +186,7 @@ docker compose down -v                 # CAUTION: Delete all data
 │  docker-compose.yml (orchestration)                              │
 │                                                                   │
 │  ┌────────────────────────────────────────────────────────────┐  │
-│  │         Docker Network: atlas_network (bridge)             │  │
+│  │         Docker Network: atlasbahamas_network (bridge)             │  │
 │  │                                                             │  │
 │  │  ┌──────────────────┐  ┌──────────────────┐               │  │
 │  │  │  nginx:1.27      │  │  postgres:16     │               │  │
@@ -198,7 +198,7 @@ docker compose down -v                 # CAUTION: Delete all data
 │  │           │ proxy_pass          │ POSTGRES_DSN            │  │
 │  │           ↓                     ↓                          │  │
 │  │  ┌─────────────────────────────────────────────────────┐  │  │
-│  │  │         atlas_app (Gunicorn + Python)              │  │  │
+│  │  │         atlasbahamas_app (Gunicorn + Python)              │  │  │
 │  │  │                                                      │  │  │
 │  │  │ Port 5000 (internal only)                           │  │  │
 │  │  │ Volumes:                                            │  │  │
@@ -208,7 +208,7 @@ docker compose down -v                 # CAUTION: Delete all data
 │  │  │                                                      │  │  │
 │  │  │ Dependencies:                                       │  │  │
 │  │  │  - WSGI Entrypoint: wsgi.py                         │  │  │
-│  │  │  - Adapter: atlas_app/wsgi_adapter.py              │  │  │
+│  │  │  - Adapter: atlasbahamas_app/wsgi_adapter.py              │  │  │
 │  │  │  - Gunicorn config: workers=4, threads=8           │  │  │
 │  │  └──────────────────────────────────────────────────────┘  │  │
 │  │           ↑                     │                          │  │
@@ -227,7 +227,7 @@ docker compose down -v                 # CAUTION: Delete all data
 │  └────────────────────────────────────────────────────────────┘  │
 │                                                                   │
 │  HTTP Flow:                                                       │
-│  Client → nginx:80 → atlas_app:5000 → wsgi.py → atlas_app      │
+│  Client → nginx:80 → atlasbahamas_app:5000 → wsgi.py → atlasbahamas_app      │
 │                                              ↓                   │
 │                                        postgres:5432             │
 │                                        redis:6379                │
@@ -246,8 +246,8 @@ POSTGRES_PASSWORD=              # Strong password (min 16 chars)
 
 **Important (Edit as Needed):**
 ```
-POSTGRES_DB=atlas              # Database name
-POSTGRES_USER=atlas            # DB user
+POSTGRES_DB=atlasbahamas              # Database name
+POSTGRES_USER=atlasbahamas            # DB user
 POSTGRES_DSN=...@postgres:...  # Connection string
 REDIS_URL=redis://redis:...    # Cache connection
 ```
@@ -272,13 +272,13 @@ UPLOAD_DIR=/app/data/uploads   # Local uploads (container filesystem)
 **Startup Order (Automatic via depends_on):**
 1. PostgreSQL starts → reports healthy (pg_isready)
 2. Redis starts → reports healthy (redis-cli PING)
-3. atlas_app starts (waits for 1 & 2 healthy)
-4. nginx starts (waits for atlas_app healthy)
+3. atlasbahamas_app starts (waits for 1 & 2 healthy)
+4. nginx starts (waits for atlasbahamas_app healthy)
 
 **Health Check Intervals:**
 - PostgreSQL: Every 10s, 5 retries, 5s timeout
 - Redis: Every 10s, 5 retries, 5s timeout
-- atlas_app: Every 30s, 3 retries, 10s timeout, 40s start period
+- atlasbahamas_app: Every 30s, 3 retries, 10s timeout, 40s start period
 - nginx: Every 30s, 3 retries, 10s timeout
 
 **Expected Startup Time:**
@@ -302,7 +302,7 @@ D:\Storage          # **Persistent business data** (maps to /app/storage)
 
 **Data Persistence:**
 - PostgreSQL data: Stored in `postgres_data` volume (survives container restart)
-- SQLite backup: Stored in `./data/atlas.sqlite` (bind mount, survives everything)
+- SQLite backup: Stored in `./data/atlasbahamas.sqlite` (bind mount, survives everything)
 - Redis data: Stored in `redis_data` volume with AOF (appendonly) mode enabled
 - App logs: Stored in `./data/logs/` (bind mount)
 - Business data: Stored in `D:\Storage` → `/app/storage` (host mount, highest durability)
@@ -311,16 +311,16 @@ D:\Storage          # **Persistent business data** (maps to /app/storage)
 - Stop containers: `docker compose stop`
 - Backup host directories:
   - `D:\Storage/` (business data)
-  - `D:\AtlasSimple\atlas\ATLAS1\data/` (logs, SQLite)
-- Export PostgreSQL: `docker compose exec -T postgres pg_dump -U atlas -d atlas > backup.sql`
+  - `D:\AtlasBahamas\atlasbahamas\ATLAS1\data/` (logs, SQLite)
+- Export PostgreSQL: `docker compose exec -T postgres pg_dump -U atlasbahamas -d atlasbahamas > backup.sql`
 
 
 ## NETWORK CONNECTIVITY
 
 **Within Container Network (dns resolution works):**
-- `atlas_app` can reach `postgres` (hostname: `postgres`)
-- `atlas_app` can reach `redis` (hostname: `redis`)
-- `nginx` can reach `atlas_app` (hostname: `atlas_app`)
+- `atlasbahamas_app` can reach `postgres` (hostname: `postgres`)
+- `atlasbahamas_app` can reach `redis` (hostname: `redis`)
+- `nginx` can reach `atlasbahamas_app` (hostname: `atlasbahamas_app`)
 
 **From Windows Host:**
 - App: http://localhost/ (port 80 via nginx)
@@ -368,8 +368,8 @@ D:\Storage          # **Persistent business data** (maps to /app/storage)
 - Verify backups: `ls -la D:\Storage/`
 
 **Monthly:**
-- Export database backup: `docker compose exec -T postgres pg_dump -U atlas -d atlas > backup_$(date).sql`
-- Clean old logs: `docker compose exec atlas_app find /app/data/logs -mtime +30 -delete`
+- Export database backup: `docker compose exec -T postgres pg_dump -U atlasbahamas -d atlasbahamas > backup_$(date).sql`
+- Clean old logs: `docker compose exec atlasbahamas_app find /app/data/logs -mtime +30 -delete`
 - Update images: `docker compose pull`
 
 **Quarterly:**
@@ -390,8 +390,8 @@ D:\Storage          # **Persistent business data** (maps to /app/storage)
 ```powershell
 docker compose up -d --build         # Deploy
 docker compose ps                    # Status
-docker compose logs -f atlas_app     # Stream logs
-docker compose exec atlas_app bash   # Terminal access
+docker compose logs -f atlasbahamas_app     # Stream logs
+docker compose exec atlasbahamas_app bash   # Terminal access
 docker compose restart               # Restart all
 docker compose stop                  # Graceful shutdown
 docker compose down -v               # Full cleanup (DATA LOSS)
@@ -445,5 +445,6 @@ docker compose down -v               # Full cleanup (DATA LOSS)
 ---
 
 **Ready to deploy! Start with: QUICKSTART.md**
+
 
 

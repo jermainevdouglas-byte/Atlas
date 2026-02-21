@@ -1,0 +1,52 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Tenant Sync</h2><p class="muted">Invite tenants to properties and remove tenant links when needed.</p><div style="margin-top:10px;"><a class="ghost-btn" href="/manager">Back to Dashboard</a></div></div></div>
+{{message_box}}
+<div class="card" style="max-width:980px;">
+  <h3 style="margin-top:0;">Send Invite</h3>
+  <form method="POST" action="/manager/tenant/invite">
+    <div class="row">
+      <div class="field" style="flex:1;"><label>Tenant (Account, Username, or Email)</label><input name="tenant_ident" required placeholder="A12345 or username"></div>
+      <div class="field" style="flex:1;"><label>Property</label><select name="property_id" id="managerTenantPropertySelect" required><option value="">Select...</option>{{property_options}}</select></div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <div class="field" style="flex:1;"><label>Unit Label</label><select name="unit_label" id="managerTenantUnitSelect"><option value="">Select property first...</option></select></div>
+      <div class="field" style="flex:1;"><label>Message (optional)</label><input name="message" placeholder="Please confirm this property assignment."></div>
+    </div>
+    <label class="muted" style="display:flex;gap:8px;align-items:center;margin-top:10px;"><input type="checkbox" name="auto_unit" value="1">Auto-select first vacant unit when no unit is selected</label>
+    <button class="primary-btn" style="margin-top:12px;">Send Confirmation Invite</button>
+  </form>
+</div>
+<div class="card" style="max-width:980px;margin-top:12px;">
+  <h3 style="margin-top:0;">Batch Listing Submission</h3>
+  <p class="muted">Update unit pricing/details in one place, save those values, then submit selected listings in one pass.</p>
+  <form method="POST" action="/manager/listing/submit_all">
+    <div class="row">
+      <div class="field" style="flex:1;"><label>Property</label><select name="property_id" id="managerListingPropertySelect" required><option value="">Select...</option>{{property_options}}</select></div>
+      <div class="field" style="flex:1;"><label>Category</label><select name="category" required><option value="Long Term Rental">Long Term Rental</option><option value="Short Term Rental">Short Term Rental</option><option value="Vehicle Rental">Vehicle Rental</option><option value="Sell Your Property to Us">Sell Your Property to Us</option></select></div>
+    </div>
+    <input type="hidden" name="unit_ids" id="managerListingUnitIds" value="">
+    <div class="card" style="margin-top:10px;overflow-x:auto;">
+      <table class="table">
+        <thead><tr><th>Submit</th><th>Unit</th><th>Title</th><th>Price</th><th>Beds</th><th>Baths</th><th>Description</th></tr></thead>
+        <tbody id="managerListingRows"><tr><td colspan="7" class="muted">Select a property to load units.</td></tr></tbody>
+      </table>
+    </div>
+    <div class="row" style="margin-top:12px;">
+      <button class="secondary-btn" type="submit" name="mode" value="save">Save Unit Changes</button>
+      <button class="primary-btn" type="submit" name="mode" value="submit">Save + Submit Selected Listings</button>
+    </div>
+  </form>
+</div>
+<div class="card" style="margin-top:12px;">
+  <h3 style="margin-top:0;">Active Tenant Links</h3>
+  <table class="table"><thead><tr><th>Tenant</th><th>Account</th><th>Property</th><th>Unit</th><th>Start</th><th>Action</th></tr></thead><tbody>{{active_rows}}</tbody></table>
+  {{active_empty}}
+</div>
+<div class="card" style="margin-top:12px;">
+  <h3 style="margin-top:0;">Invite Status</h3>
+  <table class="table"><thead><tr><th>ID</th><th>Tenant</th><th>Property</th><th>Unit</th><th>Status</th><th>Sent</th><th>Responded</th><th>Actions</th></tr></thead><tbody>{{invite_rows}}</tbody></table>
+  {{invite_empty}}
+</div>
+</div></section>
+
+

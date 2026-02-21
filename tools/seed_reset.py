@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def load_server():
     mod_path = ROOT / "server.py"
-    spec = importlib.util.spec_from_file_location("atlas_server", mod_path)
+    spec = importlib.util.spec_from_file_location("atlasbahamas_server", mod_path)
     if not spec or not spec.loader:
         raise SystemExit("cannot_load_server_module")
     mod = importlib.util.module_from_spec(spec)
@@ -17,7 +17,7 @@ def load_server():
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Reset Atlas DB and re-run schema/bootstrap setup.")
+    parser = argparse.ArgumentParser(description="Reset AtlasBahamas DB and re-run schema/bootstrap setup.")
     parser.add_argument("--yes", action="store_true", help="Skip safety prompt.")
     args = parser.parse_args()
 
@@ -43,4 +43,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

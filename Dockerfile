@@ -23,7 +23,8 @@ RUN mkdir -p /app/data /app/data/logs /app/data/uploads /app/storage
 EXPOSE 5000
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD sh -c 'curl -fsS "http://127.0.0.1:${PORT:-5000}/health" || exit 1'
+    CMD curl -f http://localhost:5000/ || exit 1
 
-CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-5000} --workers ${GUNICORN_WORKERS:-3} --threads ${GUNICORN_THREADS:-6} --timeout ${GUNICORN_TIMEOUT:-90} --access-logfile - --error-logfile - wsgi:app"]
+CMD ["gunicorn", "--preload", "--bind", "0.0.0.0:5000", "--workers", "4", "--threads", "8", "--timeout", "60", "--access-logfile", "-", "--error-logfile", "-", "wsgi:app"]
+
 

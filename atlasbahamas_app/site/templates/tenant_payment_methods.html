@@ -1,0 +1,23 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Payment Methods</h2><p class="muted">Save cards or bank methods for faster rent payments.</p><div style="margin-top:10px;"><a class="ghost-btn" href="/tenant">Back to Dashboard</a></div></div><a class="ghost-btn" href="/tenant/autopay">Autopay Settings</a></div>
+{{message_box}}
+<div class="card" style="max-width:980px;">
+<h3 style="margin-top:0;">Add Method</h3>
+<form method="POST" action="/tenant/payment-methods">
+<input type="hidden" name="action" value="add">
+<div class="row">
+<div class="field" style="flex:1;"><label>Type</label><select name="method_type"><option value="card">Card</option><option value="bank">Bank</option></select></div>
+<div class="field" style="flex:1;"><label>Label</label><input name="brand_label" required placeholder="Visa Personal"></div>
+<div class="field" style="flex:1;"><label>Last 4 Digits</label><input name="last4" maxlength="4" inputmode="numeric" required placeholder="1234"></div>
+</div>
+<label style="display:flex;gap:8px;align-items:center;margin-top:10px;"><input type="checkbox" name="is_default" value="1"> Set as default</label>
+<button class="primary-btn" style="margin-top:12px;">Save Payment Method</button>
+</form>
+</div>
+<div class="card" style="margin-top:12px;">
+<h3 style="margin-top:0;">Saved Methods</h3>
+<table class="table"><thead><tr><th>Type</th><th>Method</th><th>Default</th><th>Added</th><th>Actions</th></tr></thead><tbody>{{methods_rows}}</tbody></table>
+{{empty_box}}
+</div>
+</div></section>
+

@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 BASE_DIR = Path(__file__).resolve().parents[1]
-PORT = int(os.getenv("ATLAS_ROLE_TEST_PORT", "5092"))
+PORT = int(os.getenv("ATLASBAHAMAS_ROLE_TEST_PORT", "5092"))
 
 
 CREDS = {
@@ -59,7 +59,7 @@ def main():
     env = os.environ.copy()
     env["HOST"] = "127.0.0.1"
     env["PORT"] = str(PORT)
-    env["DATABASE_PATH"] = str(BASE_DIR / "data" / "atlas.sqlite")
+    env["DATABASE_PATH"] = str(BASE_DIR / "data" / "atlasbahamas.sqlite")
     p = subprocess.Popen(
         [sys.executable, "server.py"],
         cwd=BASE_DIR,
@@ -87,7 +87,7 @@ def main():
         time.sleep(1.2)
         for role in ("tenant", "landlord", "manager", "admin"):
             opener, jar = login_as(role)
-            csrf = get_cookie(jar, "ATLAS_CSRF")
+            csrf = get_cookie(jar, "ATLASBAHAMAS_CSRF")
             checks[f"{role}_csrf"] = bool(csrf)
             for path, marker, allowed_roles in matrix:
                 code, body = req(opener, "GET", path)
@@ -111,4 +111,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

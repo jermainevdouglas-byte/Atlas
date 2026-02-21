@@ -1,0 +1,38 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Submit Property for Listing</h2><p class="muted">Send this unit to Admin for approval. Upload photos and an optional lease PDF.</p><div style="margin-top:10px;"><a class="ghost-btn" href="/landlord">Back to Dashboard</a></div></div><a class="ghost-btn" href="/landlord/property/{{property_id}}">Back</a></div>
+
+<form class="card" method="post" action="/landlord/listing/submit" enctype="multipart/form-data">
+  <input type="hidden" name="unit_id" value="{{unit_id}}">
+  <input type="hidden" name="property_id" value="{{property_id}}">
+  <div class="grid2">
+    <label>Title<input name="title" required value="{{listing_title}}"></label>
+    <label>Monthly Rent (USD)<input name="price" type="number" min="0" required value="{{price}}"></label>
+    <label>Location<input name="location" required value="{{location}}"></label>
+    <label>Category
+      <select name="category" required>
+        <option value="Long Term Rental" {{cat_long}}>Long Term Rental</option>
+        <option value="Short Term Rental" {{cat_short}}>Short Term Rental</option>
+        <option value="Vehicle Rental" {{cat_vehicle}}>Vehicle Rental</option>
+        <option value="Sell Your Property to Us" {{cat_sell}}>Sell Your Property to Us</option>
+      </select>
+    </label>
+    <label>Beds<input name="beds" type="number" min="0" required value="{{beds}}"></label>
+    <label>Baths<input name="baths" type="number" min="0" required value="{{baths}}"></label>
+  </div>
+  <label>Description<textarea name="description" rows="5" required>{{description}}</textarea></label>
+
+  <div class="grid2">
+    <label>Upload Photos (JPG/PNG/WEBP, up to 5MB each)
+      <input name="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple>
+    </label>
+    <label>Optional Lease PDF
+      <input name="lease_pdf" type="file" accept="application/pdf">
+    </label>
+  </div>
+
+  <div class="actions">
+    <button class="primary-btn" type="submit">Submit for Approval</button>
+  </div>
+</form>
+</div></section>
+

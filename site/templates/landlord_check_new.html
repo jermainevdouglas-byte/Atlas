@@ -1,0 +1,10 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Request Property Check</h2><p class="muted">Request a check for a property you own.</p></div></div>
+<div class="card" style="max-width:820px;">{{error_box}}
+<form method="POST" action="/landlord/check/new">
+<div class="field"><label>Property ID</label><input name="property_id" required placeholder="Copy from View Property"></div>
+<div class="field" style="margin-top:10px;"><label>Preferred Date</label><input type="date" name="preferred_date" required></div>
+<div class="field" style="margin-top:10px;"><label>Notes</label><textarea name="notes" placeholder="Any specific details..."></textarea></div>
+<button class="primary-btn" style="margin-top:12px;">Submit Check Request</button>
+</form></div></div></section>
+

@@ -10,12 +10,12 @@ services:
     plan: starter
     autoDeploy: true
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 3 --threads 6 --timeout 90 wsgi:app
+    startCommand: gunicorn --preload --bind 0.0.0.0:$PORT --workers 3 --threads 6 --timeout 90 wsgi:app
     healthCheckPath: /health
     disk:
       name: atlasbahamas-data
       mountPath: /var/data
-      sizeGB: 5
+      sizeGB: 10
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.8
@@ -27,10 +27,10 @@ services:
         value: "1"
       - key: COOKIE_SECURE
         value: "1"
-      - key: SESSION_COOKIE_SAMESITE
-        value: Strict
       - key: SECURITY_HEADERS_ENABLED
         value: "1"
+      - key: SESSION_COOKIE_SAMESITE
+        value: Strict
       - key: SESSION_TIMEOUT_MINUTES
         value: "30"
       - key: MAX_LOGIN_ATTEMPTS
@@ -39,14 +39,26 @@ services:
         value: "15"
       - key: PASSWORD_HASH_ROUNDS
         value: "240000"
+      - key: CLEAR_SESSIONS_ON_START
+        value: "0"
+      - key: SEED_DEMO_DATA
+        value: "0"
+      - key: POSTGRES_REQUIRED
+        value: "1"
+      - key: DATABASE_PATH
+        value: /var/data/atlasbahamas.sqlite
+      - key: LOG_DIR
+        value: /var/data/logs
+      - key: STORAGE_ROOT
+        value: /var/data/uploads
+      - key: UPLOAD_DIR
+        value: /var/data/uploads
       - key: ALLOWED_HOSTS
         value: .onrender.com
       - key: CSRF_TRUSTED_HOSTS
         value: .onrender.com
-      - key: ATLASBAHAMAS_DB_PATH
-        value: /var/data/atlasbahamas.sqlite
-      - key: SEED_DEMO_USERS
-        value: "0"
+      - key: REDIS_SESSIONS_ENABLED
+        value: "1"
       - key: REDIS_URL
         fromService:
           type: redis
@@ -54,3 +66,5 @@ services:
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
+      - key: POSTGRES_DSN
+        sync: false

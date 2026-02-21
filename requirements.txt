@@ -5,3 +5,4 @@ psycopg[binary]==3.2.3
 celery==5.4.0
 python-dotenv==1.0.1
 
+

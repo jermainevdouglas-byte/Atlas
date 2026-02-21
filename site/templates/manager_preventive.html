@@ -1,0 +1,26 @@
+<section class="public"><div class="public-inner">
+<div class="public-header"><div><h2>Preventive Maintenance</h2><p class="muted">Schedule recurring tasks and track overdue work.</p></div></div>
+{{message_box}}
+<div class="card" style="max-width:980px;">
+  <h3 style="margin-top:0;">Create Task</h3>
+  <form method="POST" action="/manager/preventive/new">
+    <div class="row">
+      <div class="field" style="flex:1;"><label>Property</label><select name="property_id" required><option value="">Select...</option>{{property_options}}</select></div>
+      <div class="field" style="flex:1;"><label>Unit Label (optional)</label><input name="unit_label" placeholder="Unit 1"></div>
+      <div class="field" style="flex:1;"><label>Task</label><input name="task" required placeholder="HVAC filter change"></div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <div class="field" style="flex:1;"><label>Frequency (days)</label><input type="number" min="1" name="frequency_days" value="30" required></div>
+      <div class="field" style="flex:1;"><label>Next Due Date</label><input type="date" name="next_due_date" required></div>
+      <div class="field" style="flex:1;"><label>Assign Staff (optional)</label><select name="staff_id"><option value="">Unassigned</option>{{staff_options}}</select></div>
+    </div>
+    <button class="primary-btn" style="margin-top:12px;">Create Task</button>
+  </form>
+</div>
+<div class="card" style="margin-top:12px;">
+  <h3 style="margin-top:0;">Task Queue</h3>
+  {{filters_form}}
+  <table class="table"><thead><tr><th>ID</th><th>Property</th><th>Unit</th><th>Task</th><th>Frequency</th><th>Next Due</th><th>Assigned</th><th>Status</th><th>Update</th></tr></thead><tbody>{{rows}}</tbody></table>{{pager_box}}
+</div>
+</div></section>
+
